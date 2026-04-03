@@ -2,7 +2,7 @@
 
 > Personal Coding Agent Engineering Standards & Best Practices Guide
 
-[中文版本](./README.md) | English Version
+[中文版本](./README.md) | **English Version**
 
 ---
 

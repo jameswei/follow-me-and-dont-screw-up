@@ -2,6 +2,8 @@
 
 > 个人 Coding Agent 工程规范与最佳实践指南
 
+中文版本 | [English Version](./README_EN.md)
+
 ## 简介
 
 本仓库包含用于指导 Claude Code、Codex、Cursor 等 AI Coding Agent 的完整工程规范。核心理念：
