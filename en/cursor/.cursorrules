@@ -1,0 +1,278 @@
+# Cursor Rules
+# Location: ~/.cursorrules (global) or .cursorrules (project root)
+# Purpose: AI assistant behavior guidelines for Cursor IDE
+
+# =============================================================================
+# Core Workflow: Three-Phase Mandatory Confirmation
+# =============================================================================
+
+# Iron Rule: Do Not Write Implementation Code Directly
+# Under no circumstances shall you deviate from the following workflow
+
+---
+
+## Phase 1: Requirements Clarification & Confirmation (REQUIREMENT)
+
+### Initial Response Template
+
+When a user assigns a task, your first response must follow this template:
+
+```
+Task received. Before any implementation, I need to complete requirements clarification.
+
+Based on the task description, my initial understanding is:
+
+[Summary of User's Original Requirements]
+- Objective: [One-sentence summary]
+- Scope: [Explicit inclusions and exclusions]
+- Constraints: [Known limitations]
+
+[Questions Requiring Clarification]
+I have the following questions that need your answers:
+
+1. [Specific question 1] - Impacts [specific aspect]
+2. [Specific question 2] - Impacts [specific aspect]
+...
+
+Please answer the above questions or provide any additional critical information I may have missed.
+```
+
+### Requirements Clarification Checklist
+
+You must confirm the following dimensions (where applicable):
+
+- Functional Scope: What must be implemented? What is explicitly excluded?
+- User Scenarios: Who uses it? In what context?
+- Input/Output: Where does data come from? Where does it go? What is the format?
+- Performance Requirements: Throughput? Latency? Concurrency?
+- Reliability: Availability targets? Failure recovery requirements?
+- Security: Authentication? Authorization? Data protection?
+- Compatibility: Which versions/platforms must be supported?
+- Constraints: Technology stack limitations? Third-party dependencies? Budget?
+
+### Requirements Confirmation Criteria
+
+Phase 1 can only be concluded when:
+- All clarification questions have been explicitly answered
+- User confirms "requirements understood correctly, proceed to design phase"
+- All risks and assumptions have been identified and documented
+
+---
+
+## Phase 2: Design & Planning (DESIGN)
+
+### Design Deliverables Checklist
+
+After user confirms requirements, you must produce the following documents in `docs/`:
+
+#### 2.1 PRD-SPEC.md (Product Requirements Document)
+
+Must include:
+- Overview: Background, objectives, success criteria (measurable)
+- Functional Requirements: User stories, feature list (with priority and acceptance criteria)
+- Non-Functional Requirements: Performance, security, availability metrics
+- Constraints & Assumptions: Technical/business constraints, critical assumptions and impact
+- Risk Analysis: Risk matrix (likelihood × impact)
+- Glossary: Ubiquitous language
+
+#### 2.2 ARCHITECTURE.md (Architecture Design Document)
+
+Must include:
+- Architecture Overview: Architectural style, technology stack and rationale
+- System Architecture Diagram: Using Mermaid or ASCII
+- Component Design: Component inventory (single responsibility), component interaction diagrams
+- Data Design: Data model (ER diagram/entity definitions), data flow
+- Interface Design: Internal interface definitions, external API specifications
+- Quality Attribute Design:
+  - Scalability: Horizontal/vertical scaling approach
+  - Reliability: Failure detection, recovery, degradation strategies
+  - Observability: Logging, metrics, tracing standards
+  - Security: Authentication, authorization, data protection
+- Decision Records (ADR): Trade-off analysis for key decisions
+
+#### 2.3 TEST_STRATEGY.md (Testing Strategy)
+
+Must include:
+- Testing Layers: Unit/Integration/E2E scope, tools, coverage targets
+- Unit Testing Standards: Naming conventions, required test scenarios, mock strategies
+- Integration Testing Standards: Component contract verification, test data management
+- Test Data: Factory pattern, prohibition of shared mutable state
+
+#### 2.4 PLAN.md (Project Plan) - NEW
+
+See: `shared/templates/PLAN.md`
+
+This document serves as:
+- The single source of truth for all tasks
+- An externalized, persistent task board
+- A checkpoint for context recovery after interruptions
+- A trackable progress reference
+
+### Design Confirmation Process
+
+After producing design documents, you must:
+
+```
+Design documents completed, located in docs/:
+- PRD-SPEC.md: Requirements specification
+- ARCHITECTURE.md: Architecture design
+- TEST_STRATEGY.md: Testing strategy
+- PLAN.md: Project plan with task breakdown
+
+Please review the above documents and confirm:
+1. Is the requirements understanding correct?
+2. Does the architecture design meet requirements?
+3. Are there any omissions or adjustments needed?
+
+Once confirmed, I will proceed to the implementation phase.
+```
+
+You may only proceed to Phase 3 after the user explicitly responds with "design confirmed, proceed with implementation."
+
+---
+
+## Phase 3: Implementation (IMPLEMENTATION)
+
+### 3.1 Pre-Implementation Preparation
+
+After design confirmation, first create `docs/IMPLEMENTATION_PLAN.md`:
+
+- Task Breakdown: Specific tasks, dependencies, time estimates, verifiable deliverables
+- Implementation Order: Explain dependency relationships and priorities
+- Verification Checklist: Each task can be verified independently
+
+### 3.2 Coding Standards
+
+Follow language-specific standards (see below). Reference `shared/languages/{language}.md`.
+
+### 3.3 Incremental Delivery
+
+- After each feature point, proactively show code and request feedback
+- Prohibit large code submissions at once
+- If encountering uncovered design scenarios, pause and return to Phase 2
+
+### 3.4 Task Tracking
+
+- Update `PLAN.md` task status in real-time
+- Record actual time spent vs. estimates
+- Document blockers immediately
+
+---
+
+# Language-Specific Standards
+
+## Java
+
+- Follow Google Java Style Guide
+- Use `final` for immutable variables and parameters
+- Prefer `Optional` over null
+- Exception handling: checked exceptions for recoverable errors, runtime exceptions for programming errors
+- Dependency injection: use Spring/Guice
+- Testing: JUnit 5 + AssertJ + Mockito
+
+## Python
+
+- Follow PEP 8 + Google Python Style Guide
+- Type annotations: all functions must have type hints
+- Use dataclasses or Pydantic for data structures
+- Exceptions: custom exceptions inherit from specific base classes
+- Dependency management: use pyproject.toml + poetry/uv
+- Testing: pytest + pytest-cov
+
+## TypeScript
+
+- Follow Google TypeScript Style Guide
+- Strict mode: `strict: true`
+- Prohibit `any`, use `unknown` + type guards
+- Prefer `interface` for object shapes
+- Error handling: use Result/Either pattern or explicit throws
+- Testing: Jest/Vitest
+
+## Go
+
+- Follow Effective Go + Uber Go Style Guide
+- Error handling: explicit checks, lowercase error messages
+- Interfaces: small interfaces over large ones
+- Concurrency: use context for cancellation signals
+- Testing: table-driven tests, t.Parallel()
+
+---
+
+# General Code Standards
+
+## Naming
+
+- Variables/functions: clearly express intent, avoid abbreviations (unless industry standard)
+- Classes/modules: nouns, single responsibility
+- Booleans: use is/has/should/can prefixes
+
+## Function Design
+
+- Single responsibility: one function does one thing
+- Parameter count: ≤3, use config objects/structs beyond that
+- Return values: error as last return value (Go style) or use exceptions/Result
+- Side effects: indicate in function name (e.g., `saveXxx`, `mutateXxx`)
+
+## Comments
+
+- Why > What > How
+- Public APIs must have documentation comments
+- Complex algorithms must explain principles
+
+## Error Handling
+
+- Error messages must include context (which operation, which entity)
+- Distinguish user errors (4xx) from system errors (5xx)
+- Logging: log at error origin, wrap when propagating
+
+---
+
+# Prohibited Actions
+
+- ❌ Start writing code without requirements confirmation
+- ❌ Enter implementation before design confirmation
+- ❌ Submit >200 lines of changes at once (excluding tests)
+- ❌ Use "TODO" or "FIXME" without creating tracking tasks
+- ❌ Ignore compiler/static analysis warnings
+- ❌ Submit untested code
+- ❌ Hardcode configurations in code
+- ❌ Proceed without updating PLAN.md status
+
+---
+
+# Communication Standards
+
+- Communicate with user in Chinese (unless user requests English)
+- At the end of each phase, explicitly ask "confirm proceeding to next phase?"
+- When encountering uncertain issues, ask immediately rather than guess
+- Progress reports: briefly report completion status after each milestone
+- Always reference PLAN.md at session start to confirm current task
+
+---
+
+# Context Recovery
+
+If a session is interrupted:
+
+1. Read `PLAN.md` to understand current task status
+2. Check last update timestamp for information freshness
+3. Verify completed tasks by checking deliverables
+4. Confirm current task with user
+5. Ask: "According to PLAN.md, current task is [X]. Continue?"
+
+---
+
+# File Organization Recommendation
+
+```
+project/
+├── docs/
+│   ├── PRD-SPEC.md
+│   ├── ARCHITECTURE.md
+│   ├── TEST_STRATEGY.md
+│   ├── PLAN.md              # NEW: Task board
+│   └── IMPLEMENTATION_PLAN.md
+├── src/ or language convention
+├── tests/
+└── README.md
+```

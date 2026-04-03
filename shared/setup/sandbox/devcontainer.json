@@ -1,0 +1,60 @@
+{
+  "name": "My Project Dev Container",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "dev",
+  "workspaceFolder": "/workspace",
+  
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-vscode.vscode-typescript-next",
+        "golang.Go",
+        "vscjava.vscode-java-pack",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "bradlc.vscode-tailwindcss"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/workspace/.venv/bin/python",
+        "python.linting.enabled": true,
+        "python.linting.ruffEnabled": true,
+        "python.formatting.provider": "black",
+        "typescript.preferences.importModuleSpecifier": "relative",
+        "go.toolsManagement.autoUpdate": true,
+        "java.configuration.updateBuildConfiguration": "automatic"
+      }
+    }
+  },
+  
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  
+  "postStartCommand": "bash .devcontainer/post-start.sh",
+  
+  "remoteUser": "root",
+  
+  "mounts": [
+    "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.gitconfig,target=/root/.gitconfig,type=bind,consistency=cached"
+  ],
+  
+  "forwardPorts": [3000, 8080, 5000, 8000],
+  
+  "portsAttributes": {
+    "3000": {
+      "label": "Node.js App",
+      "onAutoForward": "notify"
+    },
+    "8080": {
+      "label": "Java/Go App",
+      "onAutoForward": "notify"
+    }
+  }
+}

@@ -1,0 +1,38 @@
+# Dockerfile for Python Development
+# 使用 uv 作为包管理器
+
+FROM python:3.11-slim
+
+# 安装系统依赖
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# 安装 uv
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# 设置工作目录
+WORKDIR /workspace
+
+# 复制依赖文件
+COPY pyproject.toml ./
+COPY src/ ./src/
+
+# 创建虚拟环境并安装依赖
+RUN uv venv --python 3.11 && \
+    uv pip install -e ".[dev]"
+
+# 安装开发工具
+RUN uv tool install ruff && \
+    uv tool install mypy && \
+    uv tool install pytest
+
+# 设置环境变量
+ENV PYTHONPATH=/workspace/src
+ENV PATH="/workspace/.venv/bin:${PATH}"
+
+# 默认命令
+CMD ["/bin/bash"]

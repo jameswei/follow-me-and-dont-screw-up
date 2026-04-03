@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  # Python 开发环境
+  python-dev:
+    build:
+      context: ..
+      dockerfile: sandbox/Dockerfile.python
+    image: myproject-python-dev
+    container_name: myproject-python
+    volumes:
+      - ../:/workspace
+      - python-venv:/workspace/.venv
+      - uv-cache:/root/.cache/uv
+    working_dir: /workspace
+    command: sleep infinity
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/workspace/src
+      - UV_CACHE_DIR=/root/.cache/uv
+
+  # TypeScript 开发环境
+  typescript-dev:
+    build:
+      context: ..
+      dockerfile: sandbox/Dockerfile.typescript
+    image: myproject-typescript-dev
+    container_name: myproject-typescript
+    volumes:
+      - ../:/workspace
+      - node-modules:/workspace/node_modules
+    working_dir: /workspace
+    command: sleep infinity
+    environment:
+      - NODE_ENV=development
+      - NPM_CONFIG_CACHE=/root/.npm
+
+  # Java 开发环境
+  java-dev:
+    build:
+      context: ..
+      dockerfile: sandbox/Dockerfile.java
+    image: myproject-java-dev
+    container_name: myproject-java
+    volumes:
+      - ../:/workspace
+      - maven-cache:/root/.m2
+    working_dir: /workspace
+    command: sleep infinity
+    environment:
+      - MAVEN_OPTS=-Dmaven.repo.local=/root/.m2/repository
+
+  # Go 开发环境
+  go-dev:
+    build:
+      context: ..
+      dockerfile: sandbox/Dockerfile.go
+    image: myproject-go-dev
+    container_name: myproject-go
+    volumes:
+      - ../:/workspace
+      - go-cache:/go/pkg/mod
+    working_dir: /workspace
+    command: sleep infinity
+    environment:
+      - GOPATH=/go
+      - GOCACHE=/go/cache
+
+  # 通用多语言开发环境
+  dev:
+    build:
+      context: ..
+      dockerfile: sandbox/Dockerfile
+    image: myproject-dev
+    container_name: myproject-dev
+    volumes:
+      - ../:/workspace
+      - /var/run/docker.sock:/var/run/docker.sock
+    working_dir: /workspace
+    command: sleep infinity
+    privileged: true  # 用于 Docker in Docker
+
+volumes:
+  python-venv:
+  uv-cache:
+  node-modules:
+  maven-cache:
+  go-cache:
