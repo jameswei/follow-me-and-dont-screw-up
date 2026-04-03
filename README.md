@@ -29,14 +29,14 @@ follow-me-and-dont-screw-up/
 │   │   ├── typescript.md        # TypeScript 代码规范
 │   │   └── go.md                # Go 代码规范
 │   ├── templates/
-│   │   └── PLAN.md              # 项目计划模板（新增）
+│   │   └── PLAN.md              # 项目计划模板
 │   ├── validation/
-│   │   ├── validation-workflow.md  # 验证工作流（新增）
-│   │   └── tool-recommendations.md # 推荐工具链（新增）
+│   │   ├── validation-workflow.md  # 验证工作流
+│   │   └── tool-recommendations.md # 推荐工具链
 │   ├── skills/
-│   │   └── skill-recommendations.md # 推荐技能（新增）
+│   │   └── skill-recommendations.md # 推荐技能
 │   └── setup/
-│       ├── environment-setup.md    # 环境准备指南（新增）
+│       ├── environment-setup.md    # 环境准备指南
 │       ├── scripts/                # 环境初始化脚本
 │       │   ├── check-env.sh
 │       │   ├── setup-python.sh
@@ -109,7 +109,7 @@ cp cursor/.cursorrules ./.cursorrules
 │  - docs/PRD-SPEC.md        (需求规格)                        │
 │  - docs/ARCHITECTURE.md    (架构设计)                        │
 │  - docs/TEST_STRATEGY.md   (测试策略)                        │
-│  - docs/PLAN.md            (项目计划 - 新增)                  │
+│  - docs/PLAN.md            (项目计划)                         │
 │  - 用户确认"设计无误"                                         │
 └─────────────────────────────────────────────────────────────┘
                               ↓
@@ -168,7 +168,7 @@ cp cursor/.cursorrules ./.cursorrules
 ## 4. 测试数据管理
 ```
 
-### PLAN.md（新增）
+### PLAN.md
 
 ```markdown
 # PLAN: [项目名称]
@@ -382,8 +382,8 @@ git push -u origin main
 ## 更新日志
 
 ### v1.1 (2026-04-03)
-- 新增 PLAN.md 模板，用于外置任务跟踪
-- 新增所有文档的英文版本
+- PLAN.md 模板，用于外置任务跟踪
+- 所有文档的英文版本
 - 增强上下文恢复流程
 
 ### v1.0 (2026-04-03)

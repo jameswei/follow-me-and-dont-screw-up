@@ -27,7 +27,7 @@ follow-me-and-dont-screw-up/
 │   │   ├── typescript.md        # TypeScript code standards
 │   │   └── go.md                # Go code standards
 │   └── templates/
-│       └── PLAN.md              # Project plan template (NEW)
+│       └── PLAN.md              # Project plan template
 └── en/                          # English versions
     ├── codex/
     │   └── instructions.md
@@ -107,7 +107,7 @@ When starting any project, the Agent will automatically follow this workflow:
 │  - docs/PRD-SPEC.md        (Requirements)                    │
 │  - docs/ARCHITECTURE.md    (Architecture)                    │
 │  - docs/TEST_STRATEGY.md   (Testing)                         │
-│  - docs/PLAN.md            (Project Plan - NEW)              │
+│  - docs/PLAN.md            (Project Plan)                    │
 │  - User confirms "design correct"                            │
 └─────────────────────────────────────────────────────────────┘
                               ↓
@@ -115,7 +115,7 @@ When starting any project, the Agent will automatically follow this workflow:
 │  Phase 3: Implementation                                     │
 │  - docs/IMPLEMENTATION_PLAN.md (Iteration plan)              │
 │  - Incremental delivery with checkpoints                     │
-│  - Real-time PLAN.md status updates                          │
+│  - Real-time PLAN.md status updates                         │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -166,7 +166,7 @@ When starting any project, the Agent will automatically follow this workflow:
 ## 4. Test Data Management
 ```
 
-### PLAN.md (NEW)
+### PLAN.md
 
 ```markdown
 # PLAN: [Project Name]
@@ -380,8 +380,8 @@ git push -u origin main
 ## Changelog
 
 ### v1.1 (2026-04-03)
-- Added PLAN.md template for externalized task tracking
-- Added English versions of all documents
+- PLAN.md template for externalized task tracking
+- English versions of all documents
 - Enhanced context recovery procedures
 
 ### v1.0 (2026-04-03)

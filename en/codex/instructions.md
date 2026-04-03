@@ -220,7 +220,7 @@ As a [role], I want [feature], so that [value]
 - Prohibit shared mutable test state
 ```
 
-#### 2.1.4 PLAN.md (Project Plan) - NEW
+#### 2.1.4 PLAN.md (Project Plan)
 
 ```markdown
 # PLAN: [Project Name]
@@ -259,39 +259,6 @@ As a [role], I want [feature], so that [value]
 - **Context Recovery Checkpoint**: Resume here after interruptions
 - **Trackable Progress**: Task status, hours, dependencies
 - **Single Source of Truth**: All work must be tracked here
-
-```markdown
-# TEST STRATEGY: [Project Name]
-
-## 1. Testing Layers
-| Layer | Scope | Tools | Coverage Target |
-|-------|-------|-------|-----------------|
-| Unit Tests | Single function/class | [Framework] | ≥80% |
-| Integration Tests | Component interactions | [Framework] | Critical paths |
-| E2E Tests | Complete user flows | [Tools] | P0 scenarios |
-
-## 2. Unit Testing Standards
-- Every public function must have tests
-- Naming: `Test[FunctionName]_[Scenario]_[ExpectedResult]`
-- Must include: happy path, boundary conditions, error paths
-- Mock external dependencies
-
-## 3. Integration Testing Standards
-- Test inter-component contracts
-- Use test databases/containers
-- Verify transaction behavior
-
-## 4. Test Data
-- Use factory pattern for test data
-- Prohibit shared mutable test state
-```
-
-#### 2.1.4 PLAN.md (Project Plan) - NEW
-
-See: `shared/templates/PLAN.md`
-
-This document serves as:
-- The single source of truth for all tasks
 - An externalized, persistent task board
 - A checkpoint for context recovery after interruptions
 - A trackable progress reference
