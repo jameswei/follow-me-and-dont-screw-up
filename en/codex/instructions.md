@@ -222,6 +222,72 @@ As a [role], I want [feature], so that [value]
 
 #### 2.1.4 PLAN.md (Project Plan) - NEW
 
+```markdown
+# PLAN: [Project Name]
+
+## Task Overview
+| Metric | Value |
+|--------|-------|
+| Total Tasks | [N] |
+| Completed | [N] ([%]) |
+| In Progress | [N] |
+| Blocked | [N] |
+
+## Task Breakdown (WBS)
+| ID | Task | Status | Priority | Est. Hours | Dependencies | Deliverable |
+|----|------|--------|----------|-----------|--------------|-------------|
+| 1.1.1 | [Specific task] | ⬜/🔄/✅/🚫 | P0/P1/P2 | [Xh] | [Dep ID] | [Filename] |
+
+## Dependency Graph
+```
+[Critical path visualization]
+```
+
+## Current Execution Status
+### Current Task: [Task ID]
+- Started: [YYYY-MM-DD HH:MM]
+- Est. Complete: [YYYY-MM-DD HH:MM]
+- Actual Hours: [Xh]
+
+## Change Log
+| Date | Change Type | Task ID | Change Description | Reason |
+|------|-------------|---------|-------------------|--------|
+```
+
+**Core Purpose of PLAN.md**:
+- **Externalized Task Board**: LLM reasoning persisted to file, not context-dependent
+- **Context Recovery Checkpoint**: Resume here after interruptions
+- **Trackable Progress**: Task status, hours, dependencies
+- **Single Source of Truth**: All work must be tracked here
+
+```markdown
+# TEST STRATEGY: [Project Name]
+
+## 1. Testing Layers
+| Layer | Scope | Tools | Coverage Target |
+|-------|-------|-------|-----------------|
+| Unit Tests | Single function/class | [Framework] | ≥80% |
+| Integration Tests | Component interactions | [Framework] | Critical paths |
+| E2E Tests | Complete user flows | [Tools] | P0 scenarios |
+
+## 2. Unit Testing Standards
+- Every public function must have tests
+- Naming: `Test[FunctionName]_[Scenario]_[ExpectedResult]`
+- Must include: happy path, boundary conditions, error paths
+- Mock external dependencies
+
+## 3. Integration Testing Standards
+- Test inter-component contracts
+- Use test databases/containers
+- Verify transaction behavior
+
+## 4. Test Data
+- Use factory pattern for test data
+- Prohibit shared mutable test state
+```
+
+#### 2.1.4 PLAN.md (Project Plan) - NEW
+
 See: `shared/templates/PLAN.md`
 
 This document serves as:
@@ -285,11 +351,51 @@ Follow language-specific standards (see below). Reference `shared/languages/{lan
 - Prohibit large code submissions at once
 - If encountering uncovered design scenarios, pause and return to Phase 2
 
-### 3.4 Task Tracking
+### 3.4 Validation Loop (Mandatory)
 
-- Update `PLAN.md` task status in real-time
-- Record actual time spent vs. estimates
-- Document blockers immediately
+After each code change, execute validation:
+
+```
+Step 1: Compile/Type Check
+   Command: tsc --noEmit / mypy . / go build / mvn compile
+   Failure: Stop immediately, fix syntax errors
+
+Step 2: Static Analysis
+   Command: eslint . / ruff check . / golangci-lint run
+   Failure: Fix all Errors, evaluate Warnings
+
+Step 3: Unit Tests
+   Command: jest / pytest / go test / mvn test
+   Failure: Fix failing tests, add missing tests
+   Target: Coverage ≥80%
+
+Step 4: Code Review (Self-Review)
+   Checklist:
+   - [ ] Follows language standards
+   - [ ] Clear naming
+   - [ ] Appropriate comments
+   - [ ] Proper error handling
+   - [ ] No redundant code
+```
+
+### 3.5 PLAN.md Status Updates
+
+Update task status in real-time during implementation:
+
+```markdown
+#### Task Detail: 1.1.1
+
+**Implementation**: ✅ [2026-04-03 15:00]
+**Validation**:
+- Compile: ✅ [timestamp]
+- Static Analysis: ✅ [timestamp]
+- Unit Tests: 🔄 [Coverage: 75% → Target: 80%]
+- Integration Tests: ⬜
+
+**Validation History**:
+- [2026-04-03 15:00] First validation: Compile failed, missing imports
+- [2026-04-03 15:05] After fix: Compile passed, test coverage insufficient
+```
 
 ---
 
@@ -360,6 +466,7 @@ Follow language-specific standards (see below). Reference `shared/languages/{lan
 - ❌ Submit untested code
 - ❌ Hardcode configurations in code
 - ❌ Proceed without updating PLAN.md status
+- ❌ Skip validation steps before committing
 
 ---
 

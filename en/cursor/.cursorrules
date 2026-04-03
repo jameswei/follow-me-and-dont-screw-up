@@ -100,13 +100,58 @@ Must include:
 
 #### 2.4 PLAN.md (Project Plan) - NEW
 
-See: `shared/templates/PLAN.md`
+Must include:
+- Task Overview: Total, completed, in-progress, blocked
+- Task Breakdown (WBS): ID, task, status, priority, hours, dependencies, deliverables
+- Dependency Graph: Critical path visualization
+- Current Execution Status: Current task, start time, est. completion, actual hours
+- Change Log: Date, change type, task ID, description, reason
 
-This document serves as:
-- The single source of truth for all tasks
-- An externalized, persistent task board
-- A checkpoint for context recovery after interruptions
-- A trackable progress reference
+**Core Purpose of PLAN.md**:
+- **Externalized Task Board**: LLM reasoning persisted to file
+- **Context Recovery Checkpoint**: Resume here after interruptions
+- **Trackable Progress**: Task status, hours, dependencies
+- **Single Source of Truth**: All work must be tracked here
+
+---
+
+## Environment Setup (ENVIRONMENT SETUP)
+
+### Mandatory Before Starting
+
+```
+1. Run environment check script
+   ./scripts/check-env.sh
+   
+2. If missing, run language-specific setup
+   ./scripts/setup-python.sh      # Python (uv)
+   ./scripts/setup-typescript.sh  # TypeScript (nvm + npm/bun)
+   ./scripts/setup-java.sh        # Java (jenv + maven)
+   ./scripts/setup-go.sh          # Go (goenv)
+
+3. Verify toolchain
+   make validate
+```
+
+### Recommended Version Managers
+
+| Language | Version Manager | Package Manager |
+|----------|-----------------|-----------------|
+| Python | `uv` | `uv pip` |
+| TypeScript | `nvm` | `npm`/`bun` |
+| Java | `jenv` | `maven` |
+| Go | `goenv` | `go mod` |
+
+### Docker Sandbox (Optional but Recommended)
+
+```bash
+# Start language-specific sandbox
+docker-compose -f sandbox/docker-compose.yml up -d python-dev
+docker-compose -f sandbox/docker-compose.yml up -d dev
+
+# Enter sandbox
+docker-compose -f sandbox/docker-compose.yml exec dev bash
+```
 
 ### Design Confirmation Process
 
@@ -150,6 +195,41 @@ Follow language-specific standards (see below). Reference `shared/languages/{lan
 - After each feature point, proactively show code and request feedback
 - Prohibit large code submissions at once
 - If encountering uncovered design scenarios, pause and return to Phase 2
+
+### 3.4 Validation Loop (Mandatory)
+
+After each code change, execute validation:
+
+```
+Step 1: Compile/Type Check
+   Command: tsc --noEmit / mypy . / go build / mvn compile
+   Failure: Stop immediately, fix syntax errors
+
+Step 2: Static Analysis
+   Command: eslint . / ruff check . / golangci-lint run
+   Failure: Fix all Errors, evaluate Warnings
+
+Step 3: Unit Tests
+   Command: jest / pytest / go test / mvn test
+   Failure: Fix failing tests, add missing tests
+   Target: Coverage ≥80%
+
+Step 4: Code Review (Self-Review)
+   Checklist:
+   - [ ] Follows language standards
+   - [ ] Clear naming
+   - [ ] Appropriate comments
+   - [ ] Proper error handling
+   - [ ] No redundant code
+```
+
+### 3.5 PLAN.md Status Updates
+
+Update task status in real-time:
+- Task start: Update to 🔄, record start time
+- Task complete: Update to ✅, record actual hours
+- Validation: Record compile, test, coverage status
+- Blocked: Update to 🚫, record reason
 
 ### 3.4 Task Tracking
 
@@ -237,6 +317,8 @@ Follow language-specific standards (see below). Reference `shared/languages/{lan
 - ❌ Submit untested code
 - ❌ Hardcode configurations in code
 - ❌ Proceed without updating PLAN.md status
+- ❌ Skip validation steps before committing
+- ❌ Proceed without updating PLAN.md status
 
 ---
 
@@ -246,6 +328,38 @@ Follow language-specific standards (see below). Reference `shared/languages/{lan
 - At the end of each phase, explicitly ask "confirm proceeding to next phase?"
 - When encountering uncertain issues, ask immediately rather than guess
 - Progress reports: briefly report completion status after each milestone
+- Always reference PLAN.md at session start to confirm current task
+
+---
+
+# Context Recovery
+
+## After Session Interruption
+
+If session is interrupted, recover by:
+
+1. **Read PLAN.md**: Understand current task status
+2. **Check last update**: Confirm information freshness
+3. **Verify completed tasks**: Check deliverables exist
+4. **Confirm current task**: Clarify next steps
+5. **Ask user**: "According to PLAN.md, current task is [X]. Continue?"
+
+## Session Start Template
+
+```
+Good morning/afternoon! I'm your Coding Agent.
+
+Current project status (from PLAN.md):
+- Total tasks: [N]
+- Completed: [N] ([%])
+- Current task: [Task ID] - [Description]
+- Status: [Not Started/In Progress/Done/Blocked]
+
+Continue current task?
+- Continue: I'll start from [specific step]
+- Switch: Please tell me new task ID
+- Review: I can show recent changes
+```
 - Always reference PLAN.md at session start to confirm current task
 
 ---
