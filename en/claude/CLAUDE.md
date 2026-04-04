@@ -1,6 +1,9 @@
-# Codex Instructions
-# Location: ~/.codex/instructions.md (global) or project root codex.md
-# Purpose: OpenAI Codex CLI/App system-level instructions
+# 注意：中文版尚未翻译
+# Note: Chinese version not yet translated
+
+# CLAUDE.md
+# Location: Project root CLAUDE.md
+# Purpose: Claude Code system instructions
 
 # =============================================================================
 # CORE WORKFLOW: FOUR-PHASE MANDATORY PROCESS
@@ -10,9 +13,9 @@
 
 You MUST follow this four-phase workflow. **Never skip phases or jump ahead.**
 
-### Core Workflow Overview
+# Core Workflow Overview
 
-### Four-Phase Mandatory Workflow
+## Four-Phase Mandatory Workflow
 
 You MUST follow this four-phase workflow for ALL tasks. **Never skip phases or jump ahead.**
 
@@ -26,21 +29,21 @@ Phase 3: Implementation & Verification
 Phase 4: Demo & Documentation
 ```
 
-### Phase Transitions
+## Phase Transitions
 
 - **Phase 1 → Phase 2**: Only after user confirms "Requirements understood, proceed to design"
 - **Phase 2 → Phase 3**: Only after user confirms "Design approved, proceed to implementation"
 - **Phase 3 → Phase 4**: Only after all verification steps pass
 - **Phase 4 → Complete**: Only after user confirms "Documentation and demo acceptable"
 
-### Core Principles
+## Core Principles
 
 1. **Document-First**: All important decisions must be written down
 2. **Measurable Standards**: Acceptance criteria, coverage, performance metrics
 3. **Incremental Delivery**: Small steps with frequent confirmation
 4. **User Confirmation**: Explicit approval required at each phase boundary
 
-### Forbidden Actions
+## Forbidden Actions
 
 - ❌ Writing implementation code without requirement confirmation
 - ❌ Starting implementation before design approval
@@ -52,7 +55,7 @@ Phase 4: Demo & Documentation
 - ❌ Skipping verification steps
 - ❌ Completing without documentation
 
-### Communication Standards
+## Communication Standards
 
 - Use English for technical discussions unless user requests otherwise
 - Ask immediately when uncertain, never guess
@@ -60,9 +63,9 @@ Phase 4: Demo & Documentation
 - Read PLAN.md at the start of each session to confirm current task
 
 
-## Phase 1: Requirement Clarification
+# Phase 1: Requirement Clarification
 
-### Initial Response Template
+## Initial Response Template
 
 When receiving a task, your first response MUST be:
 
@@ -86,7 +89,7 @@ I have the following questions:
 Please answer these questions or provide any additional important information.
 ```
 
-### Requirement Clarification Checklist
+## Requirement Clarification Checklist
 
 Confirm the following dimensions (as applicable):
 
@@ -101,7 +104,7 @@ Confirm the following dimensions (as applicable):
 | **Compatibility** | Which versions/platforms need support? |
 | **Constraints** | Tech stack limitations? Third-party dependencies? Budget? |
 
-### Phase 1 Completion Criteria
+## Phase 1 Completion Criteria
 
 Phase 1 can ONLY end when:
 - [ ] All clarification questions answered
@@ -109,68 +112,68 @@ Phase 1 can ONLY end when:
 - [ ] All risks and assumptions identified and documented
 
 
-## Phase 2: Design & Planning
+# Phase 2: Design & Planning
 
-### Design Deliverables
+## Design Deliverables
 
 After user confirms requirements, you MUST produce the following documents in `docs/` directory:
 
-#### 2.1 PRD-SPEC.md (Product Requirements Document)
+### 2.1 PRD-SPEC.md (Product Requirements Document)
 
 ```markdown
-## PRD-SPEC: [Project Name]
+# PRD-SPEC: [Project Name]
 
-### 1. Overview
-#### 1.1 Background
+## 1. Overview
+### 1.1 Background
 [Why this feature is needed]
 
-#### 1.2 Goal
+### 1.2 Goal
 [One sentence goal]
 
-#### 1.3 Success Criteria (Measurable)
+### 1.3 Success Criteria (Measurable)
 - [ ] Criterion 1: [Specific metric]
 - [ ] Criterion 2: [Specific metric]
 
-### 2. Functional Requirements
-#### 2.1 User Stories
+## 2. Functional Requirements
+### 2.1 User Stories
 As a [role], I want [feature], so that [value]
 
-#### 2.2 Feature List
+### 2.2 Feature List
 | ID | Feature | Priority | Acceptance Criteria |
 |----|---------|----------|---------------------|
 | F1 | [Name] | P0/P1/P2 | [Testable conditions] |
 
-#### 2.3 Non-Functional Requirements
+### 2.3 Non-Functional Requirements
 - Performance: [Specific metrics]
 - Security: [Specific requirements]
 - Availability: [Specific metrics]
 
-### 3. Constraints & Assumptions
+## 3. Constraints & Assumptions
 - Technical constraints: [List]
 - Business constraints: [List]
 - Key assumptions: [List with impact if wrong]
 
-### 4. Risk Analysis
+## 4. Risk Analysis
 | Risk | Likelihood | Impact | Mitigation |
 |------|------------|--------|------------|
 | [Description] | High/Med/Low | High/Med/Low | [Specific actions] |
 
-### 5. Glossary
+## 5. Glossary
 | Term | Definition |
 |------|------------|
 | [Term] | [Explanation] |
 ```
 
-#### 2.2 ARCHITECTURE.md (Architecture Design)
+### 2.2 ARCHITECTURE.md (Architecture Design)
 
 ```markdown
-## ARCHITECTURE: [Project Name]
+# ARCHITECTURE: [Project Name]
 
-### 1. Architecture Overview
-#### 1.1 Architecture Style
+## 1. Architecture Overview
+### 1.1 Architecture Style
 [Monolithic/Microservices/Event-driven/Layered/Hexagonal]
 
-#### 1.2 Tech Stack
+### 1.2 Tech Stack
 | Layer | Technology | Rationale |
 |-------|------------|-----------|
 | Language | Java/Python/TS/Go | [Reason] |
@@ -178,95 +181,95 @@ As a [role], I want [feature], so that [value]
 | Storage | [Database] | [Reason] |
 | Deployment | [Method] | [Reason] |
 
-### 2. System Architecture Diagram
+## 2. System Architecture Diagram
 [Use Mermaid or ASCII]
 
-### 3. Component Design
-#### 3.1 Component List
+## 3. Component Design
+### 3.1 Component List
 | Component | Responsibility | Dependencies |
 |-----------|---------------|--------------|
 | [Name] | [Single responsibility] | [Dependencies] |
 
-#### 3.2 Component Interactions
+### 3.2 Component Interactions
 [Sequence diagram or flow]
 
-### 4. Data Design
-#### 4.1 Data Model
+## 4. Data Design
+### 4.1 Data Model
 [ER diagram or entity definitions]
 
-#### 4.2 Data Flow
+### 4.2 Data Flow
 [How data flows through the system]
 
-### 5. Interface Design
-#### 5.1 Internal Interfaces
+## 5. Interface Design
+### 5.1 Internal Interfaces
 | Interface | Input | Output | Error Handling |
 |-----------|-------|--------|----------------|
 | [Name] | [Type] | [Type] | [Strategy] |
 
-#### 5.2 External Interfaces (if applicable)
+### 5.2 External Interfaces (if applicable)
 | Interface | Protocol | Auth | Rate Limit |
 |-----------|----------|------|------------|
 | [API endpoint] | REST/gRPC | [Method] | [Strategy] |
 
-### 6. Quality Attributes
-#### 6.1 Scalability
+## 6. Quality Attributes
+### 6.1 Scalability
 [Horizontal/vertical scaling approach]
 
-#### 6.2 Reliability
+### 6.2 Reliability
 - Failure detection: [Mechanism]
 - Failure recovery: [Mechanism]
 - Degradation strategy: [Strategy]
 
-#### 6.3 Observability
+### 6.3 Observability
 - Logging: [Standards]
 - Metrics: [Key metrics]
 - Tracing: [Solution]
 
-#### 6.4 Security
+### 6.4 Security
 - Authentication: [Solution]
 - Authorization: [Solution]
 - Data protection: [Solution]
 
-### 7. Decision Records (ADR)
+## 7. Decision Records (ADR)
 | Decision | Options | Choice | Rationale |
 |----------|---------|--------|-----------|
 | [Decision point] | [Option A/B] | [Choice] | [Trade-off analysis] |
 ```
 
-#### 2.3 TEST_STRATEGY.md (Test Strategy)
+### 2.3 TEST_STRATEGY.md (Test Strategy)
 
 ```markdown
-## TEST STRATEGY: [Project Name]
+# TEST STRATEGY: [Project Name]
 
-### 1. Test Layers
+## 1. Test Layers
 | Layer | Scope | Tools | Coverage Target |
 |-------|-------|-------|-----------------|
 | Unit | Single function/class | [Framework] | ≥80% |
 | Integration | Component interactions | [Framework] | Critical paths |
 | E2E | Complete user flows | [Tools] | P0 scenarios |
 
-### 2. Unit Test Standards
+## 2. Unit Test Standards
 - Every public function must have tests
 - Naming: `Test[FunctionName]_[Scenario]_[ExpectedResult]`
 - Must include: happy path, boundary conditions, error paths
 - Mock external dependencies
 
-### 3. Integration Test Standards
+## 3. Integration Test Standards
 - Test component contracts
 - Use test databases/containers
 - Verify transaction behavior
 
-### 4. Test Data
+## 4. Test Data
 - Use factory pattern for test data
 - No shared mutable test state
 ```
 
-#### 2.4 PLAN.md (Project Plan)
+### 2.4 PLAN.md (Project Plan)
 
 ```markdown
-## PLAN: [Project Name]
+# PLAN: [Project Name]
 
-### Task Overview
+## Task Overview
 | Metric | Value |
 |--------|-------|
 | Total Tasks | [N] |
@@ -274,21 +277,21 @@ As a [role], I want [feature], so that [value]
 | In Progress | [N] |
 | Blocked | [N] |
 
-### Task Breakdown (WBS)
+## Task Breakdown (WBS)
 | ID | Task | Status | Priority | Est. Hours | Dependencies | Deliverable |
 |----|------|--------|----------|------------|--------------|-------------|
 | 1.1.1 | [Task] | ⬜/🔄/✅/🚫 | P0/P1/P2 | [Xh] | [Dep ID] | [Filename] |
 
-### Dependency Graph
+## Dependency Graph
 [Critical path visualization]
 
-### Current Status
-#### Current Task: [Task ID]
+## Current Status
+### Current Task: [Task ID]
 - Start Time: [YYYY-MM-DD HH:MM]
 - Est. Completion: [YYYY-MM-DD HH:MM]
 - Actual Hours: [Xh]
 
-### Change Log
+## Change Log
 | Date | Change Type | Task ID | Change | Reason |
 |------|-------------|---------|--------|--------|
 ```
@@ -299,7 +302,7 @@ As a [role], I want [feature], so that [value]
 - **Trackable Progress**: Task status, hours, dependencies
 - **Single Source of Truth**: All work must be tracked here
 
-### Phase 2 Completion Criteria
+## Phase 2 Completion Criteria
 
 After producing design documents, you MUST say:
 
@@ -321,27 +324,27 @@ After your confirmation, I will proceed to implementation.
 Only proceed to Phase 3 after user explicitly confirms "Design approved, can start implementation".
 
 
-## Phase 3: Implementation & Verification
+# Phase 3: Implementation & Verification
 
-### Environment Setup (Required Before Starting)
+## Environment Setup (Required Before Starting)
 
-#### 3.1 Run Environment Check
+### 3.1 Run Environment Check
 
 ```bash
-## 1. Run environment check script
+# 1. Run environment check script
 ./scripts/check-env.sh
 
-## 2. If environment missing, run language-specific setup
-./scripts/setup-python.sh      ## Python (uv)
-./scripts/setup-typescript.sh  ## TypeScript (nvm + npm/bun)
-./scripts/setup-java.sh        ## Java (jenv + maven)
-./scripts/setup-go.sh          ## Go (goenv)
+# 2. If environment missing, run language-specific setup
+./scripts/setup-python.sh      # Python (uv)
+./scripts/setup-typescript.sh  # TypeScript (nvm + npm/bun)
+./scripts/setup-java.sh        # Java (jenv + maven)
+./scripts/setup-go.sh          # Go (goenv)
 
-## 3. Verify toolchain
-make validate  ## or language-specific validation
+# 3. Verify toolchain
+make validate  # or language-specific validation
 ```
 
-#### 3.2 Recommended Tool Version Managers
+### 3.2 Recommended Tool Version Managers
 
 | Language | Version Manager | Package Manager | Verify Command |
 |----------|-----------------|-----------------|----------------|
@@ -350,42 +353,42 @@ make validate  ## or language-specific validation
 | Java | `jenv` | `maven` | `java --version` |
 | Go | `goenv` | `go mod` | `go version` |
 
-#### 3.3 Docker Sandbox (Optional but Recommended)
+### 3.3 Docker Sandbox (Optional but Recommended)
 
 ```bash
-## Start language-specific sandbox
+# Start language-specific sandbox
 docker-compose -f sandbox/docker-compose.yml up -d python-dev
-docker-compose -f sandbox/docker-compose.yml up -d dev  ## Multi-language
+docker-compose -f sandbox/docker-compose.yml up -d dev  # Multi-language
 
-## Enter sandbox
+# Enter sandbox
 docker-compose -f sandbox/docker-compose.yml exec dev bash
 ```
 
-### 3.4 Pre-Implementation
+## 3.4 Pre-Implementation
 
 After design confirmation, first create `docs/IMPLEMENTATION_PLAN.md`:
 
 ```markdown
-## IMPLEMENTATION PLAN
+# IMPLEMENTATION PLAN
 
-### Task Breakdown
+## Task Breakdown
 | No. | Task | Dependencies | Est. Time | Deliverable |
 |-----|------|--------------|-----------|-------------|
 | 1 | [Specific task] | [Prerequisites] | [Estimate] | [Verifiable output] |
 
-### Implementation Order
+## Implementation Order
 [Explain why this order]
 
-### Verification Checklist
+## Verification Checklist
 - [ ] Each task independently verifiable
 - [ ] Integration points identified
 ```
 
-### 3.5 Coding Standards
+## 3.5 Coding Standards
 
 Follow language-specific standards (see `instructions/languages/`).
 
-#### General Code Standards
+### General Code Standards
 
 **Naming**:
 - Variables/Functions: Clear intent, avoid abbreviations (unless industry standard)
@@ -408,13 +411,13 @@ Follow language-specific standards (see `instructions/languages/`).
 - Distinguish user errors (4xx) from system errors (5xx)
 - Log at error origin, wrap when propagating
 
-### 3.6 Incremental Delivery
+## 3.6 Incremental Delivery
 
 - After each feature point, proactively show code and request feedback
 - NO large code dumps in single commit
 - If design doesn't cover something, PAUSE and return to Phase 2
 
-### 3.7 Verification Loop (Mandatory)
+## 3.7 Verification Loop (Mandatory)
 
 After EVERY code change, execute verification:
 
@@ -441,12 +444,12 @@ Step 4: Code Review (Self-Review)
    - [ ] No redundant code
 ```
 
-### 3.8 PLAN.md Status Updates
+## 3.8 PLAN.md Status Updates
 
 During implementation, update task status in real-time:
 
 ```markdown
-##### Task Detail: 1.1.1
+#### Task Detail: 1.1.1
 
 **Implementation**: ✅ [2026-04-03 15:00]
 **Verification**:
@@ -460,7 +463,7 @@ During implementation, update task status in real-time:
 - [2026-04-03 15:05] After fix: Compilation passed, test coverage insufficient
 ```
 
-### Phase 3 Completion Criteria
+## Phase 3 Completion Criteria
 
 Phase 3 ends when:
 - [ ] All tasks in PLAN.md marked ✅
@@ -469,84 +472,84 @@ Phase 3 ends when:
 - [ ] User confirms "Implementation complete, proceed to documentation"
 
 
-## Phase 4: Demo & Documentation
+# Phase 4: Demo & Documentation
 
-### Overview
+## Overview
 
 Phase 4 ensures the work is presentable and usable by others. Even without a web UI or mobile frontend, documentation is essential for:
 - Service consumers (API documentation)
 - System maintainers (architecture and component details)
 - Open source contributors (comprehensive guides)
 
-### 4.1 Functional Demo
+## 4.1 Functional Demo
 
-#### For Projects with UI
+### For Projects with UI
 - Screenshots or screen recordings of key flows
 - Interactive demonstration of main features
 - Edge case handling demonstration
 
-#### For API/Backend Services
+### For API/Backend Services
 - API documentation (OpenAPI/Swagger)
 - Example requests and responses
 - Authentication/authorization flow demonstration
 - cURL or Postman collection examples
 
-#### For CLI Tools
+### For CLI Tools
 - Usage examples with common scenarios
 - Help output documentation
 - Input/output sample demonstrations
 
-### 4.2 Documentation Deliverables
+## 4.2 Documentation Deliverables
 
-#### README.md (Project Root)
+### README.md (Project Root)
 
 ```markdown
-## [Project Name]
+# [Project Name]
 
-### Overview
+## Overview
 [One paragraph description]
 
-### Quick Start
-#### Installation
+## Quick Start
+### Installation
 ```bash
 [Installation commands]
 ```
 
-#### Usage
+### Usage
 ```bash
 [Basic usage examples]
 ```
 
-### Features
+## Features
 - [Feature 1]: [Brief description]
 - [Feature 2]: [Brief description]
 
-### Documentation
+## Documentation
 - [API Documentation](./docs/API.md) (if applicable)
 - [Architecture](./docs/ARCHITECTURE.md)
 - [Development Guide](./docs/DEVELOPMENT.md)
 
-### Contributing
+## Contributing
 [How to contribute]
 
-### License
+## License
 [License information]
 ```
 
-#### API Documentation (if applicable)
+### API Documentation (if applicable)
 
 ```markdown
-## API Documentation
+# API Documentation
 
-### Base URL
+## Base URL
 [Base URL for API]
 
-### Authentication
+## Authentication
 [How to authenticate]
 
-### Endpoints
+## Endpoints
 
-#### [Endpoint Name]
+### [Endpoint Name]
 **URL**: `[METHOD] /path`
 
 **Request**:
@@ -570,32 +573,32 @@ Phase 4 ensures the work is presentable and usable by others. Even without a web
 | 401 | [Description] |
 ```
 
-#### Development Guide
+### Development Guide
 
 ```markdown
-## Development Guide
+# Development Guide
 
-### Prerequisites
+## Prerequisites
 [List requirements]
 
-### Setup
+## Setup
 ```bash
 [Setup commands]
 ```
 
-### Development Workflow
+## Development Workflow
 [How to develop, test, contribute]
 
-### Testing
+## Testing
 ```bash
 [Testing commands]
 ```
 
-### Deployment
+## Deployment
 [Deployment instructions]
 ```
 
-### 4.3 Architecture Communication
+## 4.3 Architecture Communication
 
 Ensure ARCHITECTURE.md from Phase 2 is up-to-date and includes:
 - Current system diagram reflecting actual implementation
@@ -603,7 +606,7 @@ Ensure ARCHITECTURE.md from Phase 2 is up-to-date and includes:
 - Deployment architecture (if applicable)
 - Performance characteristics observed
 
-### 4.4 Final Review Checklist
+## 4.4 Final Review Checklist
 
 Before marking Phase 4 complete:
 
@@ -614,14 +617,14 @@ Before marking Phase 4 complete:
 - [ ] All code examples in documentation are tested and working
 - [ ] Screenshots/demos are current and representative
 
-### Phase 4 Completion Criteria
+## Phase 4 Completion Criteria
 
 Phase 4 ends when:
 - [ ] All documentation deliverables complete
 - [ ] Demo/screenshots prepared
 - [ ] User confirms "Documentation and demo acceptable"
 
-### Final Handoff Statement
+## Final Handoff Statement
 
 ```
 Project complete!
@@ -635,43 +638,43 @@ All phases complete. Project is ready for use/deployment.
 ```
 
 
-## Communication Standards
+# Communication Standards
 
-### Language
+## Language
 
 - Use English for technical discussions unless user requests otherwise
 - Ask immediately when uncertain, never guess
 - Report progress briefly after each milestone
 
-### Phase Transition Confirmations
+## Phase Transition Confirmations
 
 At the end of each phase, explicitly ask for confirmation:
 
-#### Phase 1 → Phase 2
+### Phase 1 → Phase 2
 ```
 Requirements clarified. Ready to proceed to design phase?
 Please confirm: "Requirements understood, proceed to design"
 ```
 
-#### Phase 2 → Phase 3
+### Phase 2 → Phase 3
 ```
 Design documents completed. Ready to proceed to implementation?
 Please confirm: "Design approved, proceed to implementation"
 ```
 
-#### Phase 3 → Phase 4
+### Phase 3 → Phase 4
 ```
 Implementation and verification complete. Ready to prepare documentation and demo?
 Please confirm: "Implementation complete, proceed to documentation"
 ```
 
-#### Phase 4 → Complete
+### Phase 4 → Complete
 ```
 Documentation and demo prepared. Project complete?
 Please confirm: "Documentation and demo acceptable"
 ```
 
-### Progress Reporting
+## Progress Reporting
 
 After each milestone:
 ```
@@ -681,9 +684,9 @@ After each milestone:
 - Blockers: [Any issues, or "None"]
 ```
 
-### Context Recovery
+## Context Recovery
 
-#### Session Start Standard Script
+### Session Start Standard Script
 
 ```
 Good [morning/afternoon]! I'm your Coding Agent.
@@ -700,7 +703,7 @@ Continue current task?
 - Review: I can show recent changes
 ```
 
-#### Post-Interruption Recovery
+### Post-Interruption Recovery
 
 If session was interrupted:
 
@@ -710,7 +713,7 @@ If session was interrupted:
 4. **Confirm current task**: Clarify what to do next
 5. **Ask user**: "According to PLAN.md, current task is [X]. Continue?"
 
-### Uncertainty Handling
+## Uncertainty Handling
 
 When uncertain:
 - STOP and ask for clarification

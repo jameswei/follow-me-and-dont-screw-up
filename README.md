@@ -8,20 +8,40 @@
 
 本仓库包含用于指导 Claude Code、Codex、Cursor 等 AI Coding Agent 的完整工程规范。核心理念：
 
-- **三阶段强制确认**: 需求澄清 → 设计产出 → 实现
+- **四阶段强制确认**: 需求澄清 → 设计产出 → 实现验证 → 演示文档
 - **文档优先**: 所有重要决策必须落盘
 - **可度量标准**: 验收标准、覆盖率、性能指标
 - **语言特定规范**: Java、Python、TypeScript、Go
+
+> **更新 v2.0**: 新增 Phase 4（演示与文档），支持 Claude Code，统一源文件管理
 
 ## 仓库结构
 
 ```
 follow-me-and-dont-screw-up/
 ├── README.md                    # 本文件
+├── instructions/                # 统一源文件（新增）
+│   ├── core/                    # 核心工作流定义
+│   │   ├── 01-workflow-overview.md
+│   │   ├── 02-phase1-requirement.md
+│   │   ├── 03-phase2-design.md
+│   │   ├── 04-phase3-implementation.md
+│   │   ├── 05-phase4-demo-docs.md
+│   │   └── 06-communication.md
+│   ├── languages/               # 语言特定规范
+│   └── templates/               # 文档模板
+├── scripts/
+│   └── generate-agent-configs.py # 生成脚本
 ├── codex/
-│   └── instructions.md          # OpenAI Codex 全局指令
+│   └── instructions.md          # OpenAI Codex 全局指令（自动生成）
+├── claude/
+│   └── CLAUDE.md                # Claude Code 指令（新增，自动生成）
 ├── cursor/
-│   └── .cursorrules             # Cursor IDE 规则文件
+│   └── .cursorrules             # Cursor IDE 规则文件（自动生成）
+├── en/                          # 英文版本
+│   ├── codex/
+│   ├── claude/
+│   └── cursor/
 ├── shared/
 │   ├── languages/
 │   │   ├── java.md              # Java 代码规范
@@ -69,7 +89,21 @@ follow-me-and-dont-screw-up/
 
 ## 快速开始
 
-### 1. 安装配置
+### 1. 生成 Agent 配置（从统一源文件）
+
+```bash
+# 修改 instructions/core/ 后，重新生成各 agent 配置
+python3 scripts/generate-agent-configs.py
+```
+
+### 2. 配置各 Agent
+
+#### Claude Code
+
+```bash
+# 项目根目录
+cp claude/CLAUDE.md ./CLAUDE.md
+```
 
 #### Codex (OpenAI)
 
@@ -114,10 +148,18 @@ cp cursor/.cursorrules ./.cursorrules
 └─────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────┐
-│  Phase 3: 实现                                               │
+│  Phase 3: 实现与验证                                          │
 │  - docs/IMPLEMENTATION_PLAN.md (实现计划)                    │
-│  - 增量交付，每步确认                                          │
+│  - 编码 + 测试 + 静态分析                                     │
 │  - 实时更新 PLAN.md 状态                                      │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│  Phase 4: 演示与文档 (新增)                                   │
+│  - 功能演示 / API 文档                                       │
+│  - README / 开发文档                                         │
+│  - 架构文档更新                                              │
+│  - 用户确认"文档可接受"                                       │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -380,6 +422,13 @@ git push -u origin main
 ```
 
 ## 更新日志
+
+### v2.0 (2026-04-04)
+- **新增 Phase 4**: 演示与文档阶段
+- **新增 Claude Code 支持**: claude/CLAUDE.md
+- **统一源文件管理**: instructions/core/ 目录
+- **自动生成脚本**: scripts/generate-agent-configs.py
+- 支持从统一源文件生成 Codex/Claude/Cursor 三份配置
 
 ### v1.1 (2026-04-03)
 - PLAN.md 模板，用于外置任务跟踪
