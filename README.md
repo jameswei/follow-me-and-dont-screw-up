@@ -6,21 +6,22 @@
 
 ## 简介
 
-本仓库包含用于指导 Claude Code、Codex、Cursor 等 AI Coding Agent 的完整工程规范。核心理念：
+本仓库包含用于指导 Claude Code、Codex、Cursor、Gemini CLI 等 AI Coding Agent 的完整工程规范。核心理念：
 
 - **共享中性核心**: `instructions/core/` 为所有 Agent 提供通用工作流与行为基线
-- **Agent 专属封装**: `codex/`、`claude/`、`cursor/` 各自生成对应的指令文件
+- **Agent 专属封装**: `codex/`、`claude/`、`cursor/`、`gemini/` 各自生成对应的指令文件
 - **文档优先**: 所有重要决策必须落盘
 - **可度量标准**: 验收标准、覆盖率、性能指标
 - **语言特定规范**: Java、Python、TypeScript、Go
 
-> **更新 v2.2**: 统一为“共享核心 + Agent 专属封装”模式，避免跨 Agent 污染指令
+> **更新 v2.3**: 增加对 Gemini CLI 的支持 (`gemini/GEMINI.md`)
 
 ## What's New
 
+- 增加对 Gemini CLI 的支持 (`gemini/GEMINI.md`)。
 - Split Codex instructions into `global.md`, `project.md`, and a compatibility bundle.
 - Refactored the shared core to be agent-neutral instead of Codex-specific.
-- Regenerated Claude and Cursor outputs so they now inherit the shared neutral baseline.
+- Regenerated Claude, Cursor and Gemini outputs so they now inherit the shared neutral baseline.
 - Added `codex/README.md` plus reusable plan templates under `codex/templates/`.
 
 ## 仓库结构
@@ -52,10 +53,13 @@ follow-me-and-dont-screw-up/
 │   └── CLAUDE.md                # Claude Code 指令（新增，自动生成）
 ├── cursor/
 │   └── .cursorrules             # Cursor IDE 规则文件（自动生成）
+├── gemini/
+│   └── GEMINI.md                # Gemini CLI 指令（新增，自动生成）
 ├── en/                          # 英文版本
 │   ├── codex/
 │   ├── claude/
-│   └── cursor/
+│   ├── cursor/
+│   └── gemini/
 ├── shared/
 │   ├── languages/
 │   │   ├── java.md              # Java 代码规范
@@ -89,8 +93,12 @@ follow-me-and-dont-screw-up/
 └── en/                          # 英文版本
     ├── codex/
     │   └── instructions.md
+    ├── claude/
+    │   └── CLAUDE.md
     ├── cursor/
     │   └── .cursorrules
+    ├── gemini/
+    │   └── GEMINI.md
     └── shared/
         ├── languages/
         │   ├── java.md
@@ -133,9 +141,16 @@ cp codex/instructions.md ./codex.md
 cat codex/global.md codex/project.md > ~/.codex/instructions.md
 ```
 
-#### Claude Code / Cursor
+#### Claude Code / Cursor / Gemini
 
 这两个 Agent 的输出文件由 `instructions/core/` 生成，保持同一套共享核心，但分别带有自己的文件格式与入口名。
+
+#### Gemini
+
+```bash
+# 项目根目录
+cp gemini/GEMINI.md ./GEMINI.md
+```
 
 #### Cursor
 
@@ -443,6 +458,10 @@ git push -u origin main
 ```
 
 ## 更新日志
+
+### v2.1 (2026-04-07)
+- **新增 Gemini CLI 支持**: `gemini/GEMINI.md`
+- **更新脚本**: 自动生成脚本支持 Gemini
 
 ### v2.0 (2026-04-04)
 - **新增 Phase 4**: 演示与文档阶段

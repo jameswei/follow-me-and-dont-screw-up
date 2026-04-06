@@ -8,19 +8,20 @@
 
 ## Introduction
 
-This repository contains comprehensive engineering standards for guiding Claude Code, Codex, Cursor, and other AI Coding Agents. Our core principles:
+This repository contains comprehensive engineering standards for guiding Claude Code, Codex, Cursor, Gemini CLI, and other AI Coding Agents. Our core principles:
 
 - **Shared Neutral Core**: `instructions/core/` provides the common workflow and behavior baseline
-- **Agent-Specific Wrappers**: `codex/`, `claude/`, and `cursor/` each generate their own instruction files
+- **Agent-Specific Wrappers**: `codex/`, `claude/`, `cursor/`, and `gemini/` each generate their own instruction files
 - **Documentation First**: All significant decisions must be documented
 - **Measurable Standards**: Acceptance criteria, coverage, performance metrics
 - **Language-Specific Standards**: Java, Python, TypeScript, Go
 
 ## What's New
 
+- Added Gemini CLI support (`gemini/GEMINI.md`).
 - Split Codex instructions into `global.md`, `project.md`, and a compatibility bundle.
 - Refactored the shared core to be agent-neutral instead of Codex-specific.
-- Regenerated Claude and Cursor outputs so they now inherit the shared neutral baseline.
+- Regenerated Claude, Cursor, and Gemini outputs so they now inherit the shared neutral baseline.
 - Added `codex/README.md` plus reusable plan templates under `codex/templates/`.
 
 ## Repository Structure
@@ -37,8 +38,12 @@ follow-me-and-dont-screw-up/
 │   └── templates/
 │       ├── PLAN.md              # Project plan template
 │       └── IMPLEMENTATION_PLAN.md # Implementation plan template
+├── claude/
+│   └── CLAUDE.md                # Claude Code instructions
 ├── cursor/
 │   └── .cursorrules             # Cursor IDE rules file
+├── gemini/
+│   └── GEMINI.md                # Gemini CLI instructions
 ├── shared/
 │   ├── languages/
 │   │   ├── java.md              # Java code standards
@@ -71,7 +76,9 @@ follow-me-and-dont-screw-up/
 │           └── README.md
 └── en/                          # English versions of all docs
     ├── codex/instructions.md
+    ├── claude/CLAUDE.md
     ├── cursor/.cursorrules
+    ├── gemini/GEMINI.md
     └── shared/
         ├── languages/
         ├── skills/
@@ -98,9 +105,16 @@ cp codex/instructions.md ./codex.md
 cat codex/global.md codex/project.md > ~/.codex/instructions.md
 ```
 
-#### Claude Code / Cursor
+#### Claude Code / Cursor / Gemini
 
 Their generated files are built from the shared neutral core in `instructions/core/`, with agent-specific wrappers applied on top.
+
+#### Gemini
+
+```bash
+# Project root
+cp gemini/GEMINI.md ./GEMINI.md
+```
 
 #### Cursor
 
@@ -404,6 +418,10 @@ git push -u origin main
 ```
 
 ## Changelog
+
+### v1.2 (2026-04-07)
+- Added Gemini CLI support (`gemini/GEMINI.md`)
+- Updated generation script to support Gemini
 
 ### v1.1 (2026-04-03)
 - Added PLAN.md template for externalized task tracking
