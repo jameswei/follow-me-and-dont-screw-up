@@ -16,6 +16,13 @@ This repository contains comprehensive engineering standards for guiding Claude 
 - **Measurable Standards**: Acceptance criteria, coverage, performance metrics
 - **Language-Specific Standards**: Java, Python, TypeScript, Go
 
+## What's New
+
+- Split Codex instructions into `global.md`, `project.md`, and a compatibility bundle.
+- Refactored the shared core to be agent-neutral instead of Codex-specific.
+- Regenerated Claude and Cursor outputs so they now inherit the shared neutral baseline.
+- Added `codex/README.md` plus reusable plan templates under `codex/templates/`.
+
 ## Repository Structure
 
 ```

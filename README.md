@@ -16,6 +16,13 @@
 
 > **更新 v2.2**: 统一为“共享核心 + Agent 专属封装”模式，避免跨 Agent 污染指令
 
+## What's New
+
+- Split Codex instructions into `global.md`, `project.md`, and a compatibility bundle.
+- Refactored the shared core to be agent-neutral instead of Codex-specific.
+- Regenerated Claude and Cursor outputs so they now inherit the shared neutral baseline.
+- Added `codex/README.md` plus reusable plan templates under `codex/templates/`.
+
 ## 仓库结构
 
 ```
