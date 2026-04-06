@@ -2,69 +2,74 @@
 """
 Generate agent-specific configuration files from unified instruction sources.
 
-This script reads from instructions/core/ and generates:
-- codex/instructions.md (OpenAI Codex)
+This script reads from:
+- codex/ for the Codex-specific split bundle
+- instructions/core/ for the shared, agent-neutral baseline
+
+It then generates:
+- codex/instructions.md (single-file compatibility bundle)
 - claude/CLAUDE.md (Claude Code)
 - cursor/.cursorrules (Cursor IDE)
 
 And their Chinese translations in en/ directory.
 """
 
-import os
-import re
 from pathlib import Path
-from typing import List, Dict
-
 # Configuration
 BASE_DIR = Path(__file__).parent.parent
-INSTRUCTIONS_DIR = BASE_DIR / "instructions"
-CORE_DIR = INSTRUCTIONS_DIR / "core"
 OUTPUT_DIR = BASE_DIR
+CODEX_DIR = OUTPUT_DIR / "codex"
+CORE_DIR = OUTPUT_DIR / "instructions" / "core"
+CORE_FILES = [
+    "01-workflow-overview.md",
+    "02-phase1-requirement.md",
+    "03-phase2-design.md",
+    "04-phase3-implementation.md",
+    "05-phase4-demo-docs.md",
+    "06-communication.md",
+]
 
 # File reading helpers
+def read_file(filepath: Path) -> str:
+    """Read a file, returning a placeholder if it is missing."""
+    if not filepath.exists():
+        return f"# {filepath.name} not found\n"
+    return filepath.read_text(encoding='utf-8')
+
+def read_codex_file(filename: str) -> str:
+    """Read a Codex instruction file."""
+    return read_file(CODEX_DIR / filename)
+
 def read_core_file(filename: str) -> str:
-    """Read a core instruction file."""
+    """Read a shared core instruction file."""
     filepath = CORE_DIR / filename
     if not filepath.exists():
         return f"# {filename} not found\n"
     return filepath.read_text(encoding='utf-8')
 
-def read_all_core() -> str:
-    """Read all core files in order."""
-    files = [
-        "01-workflow-overview.md",
-        "02-phase1-requirement.md",
-        "03-phase2-design.md",
-        "04-phase3-implementation.md",
-        "05-phase4-demo-docs.md",
-        "06-communication.md",
+def read_core_bundle() -> str:
+    """Read all shared core files in order."""
+    parts = [read_core_file(filename).strip() for filename in CORE_FILES]
+    return "\n\n".join(part for part in parts if part)
+
+def read_split_codex_bundle() -> str:
+    """Read the Codex split files and combine them into one bundle."""
+    parts = [
+        read_codex_file("global.md").strip(),
+        read_codex_file("project.md").strip(),
     ]
-    content = []
-    for f in files:
-        content.append(read_core_file(f))
-    return "\n\n".join(content)
+    return "\n\n".join(part for part in parts if part)
 
 # Content transformers
 def to_codex_format(content: str) -> str:
     """Convert to Codex format (markdown with clear headers)."""
     header = """# Codex Instructions
-# Location: ~/.codex/instructions.md (global) or project root codex.md
-# Purpose: OpenAI Codex CLI/App system-level instructions
 
-# =============================================================================
-# CORE WORKFLOW: FOUR-PHASE MANDATORY PROCESS
-# =============================================================================
-
-## Iron Rule: Never Write Implementation Code Directly
-
-You MUST follow this four-phase workflow. **Never skip phases or jump ahead.**
+This is the compatibility bundle for `~/.codex/instructions.md`.
+The split source files live in `codex/global.md` and `codex/project.md`.
 
 """
-    # Clean up the content for Codex
-    cleaned = content.replace("# ", "## ")
-    cleaned = cleaned.replace("## ", "### ", 1)  # First header stays as section
-    
-    return header + cleaned
+    return header + content.strip() + "\n"
 
 def to_claude_format(content: str) -> str:
     """Convert to Claude Code format (CLAUDE.md - similar to Codex)."""
@@ -72,17 +77,8 @@ def to_claude_format(content: str) -> str:
 # Location: Project root CLAUDE.md
 # Purpose: Claude Code system instructions
 
-# =============================================================================
-# CORE WORKFLOW: FOUR-PHASE MANDATORY PROCESS
-# =============================================================================
-
-## Iron Rule: Never Write Implementation Code Directly
-
-You MUST follow this four-phase workflow. **Never skip phases or jump ahead.**
-
 """
-    # Claude Code uses similar markdown format as Codex
-    return header + content
+    return header + content.strip() + "\n"
 
 def to_cursor_format(content: str) -> str:
     """Convert to Cursor format (.cursorrules with specific syntax)."""
@@ -90,85 +86,24 @@ def to_cursor_format(content: str) -> str:
 # Location: ~/.cursorrules (global) or project root .cursorrules
 # Purpose: Cursor IDE AI assistant behavior rules
 
-# =============================================================================
-# CORE WORKFLOW: FOUR-PHASE MANDATORY PROCESS
-# =============================================================================
-
-# Iron Rule: Never write implementation code directly
-# You MUST follow this four-phase workflow for ALL tasks
-
 """
-    
-    # Transform markdown headers to Cursor comment style
-    lines = content.split('\n')
-    result = []
-    in_code_block = False
-    
-    for line in lines:
-        # Track code blocks
-        if line.strip().startswith('```'):
-            in_code_block = not in_code_block
-            result.append(line)
-            continue
-        
-        # Inside code blocks, keep as-is
-        if in_code_block:
-            result.append(line)
-            continue
-        
-        # Transform headers to Cursor style
-        if line.startswith('# '):
-            result.append(f"# {'=' * 77}")
-            result.append(f"# {line[2:].upper()}")
-            result.append(f"# {'=' * 77}")
-        elif line.startswith('## '):
-            result.append(f"\n# {'-' * 77}")
-            result.append(f"# {line[3:]}")
-            result.append(f"# {'-' * 77}")
-        elif line.startswith('### '):
-            result.append(f"\n### {line[4:]}")
-        elif line.startswith('- ') or line.startswith('- [') or line.startswith('|'):
-            # Keep list items and tables
-            result.append(line)
-        elif line.strip() and not line.startswith('#'):
-            # Regular text - add as comment if not already
-            if not line.strip().startswith('```'):
-                result.append(line)
-        else:
-            result.append(line)
-    
-    return header + '\n'.join(result)
-
-# Language-specific content injection
-def get_language_standards() -> str:
-    """Read and combine all language standards."""
-    lang_dir = INSTRUCTIONS_DIR / "languages"
-    if not lang_dir.exists():
-        return ""
-    
-    content = ["\n# LANGUAGE-SPECIFIC STANDARDS\n"]
-    for lang_file in sorted(lang_dir.glob("*.md")):
-        content.append(f"\n## {lang_file.stem.upper()}\n")
-        content.append(lang_file.read_text(encoding='utf-8'))
-    
-    return '\n'.join(content)
+    return header + content.strip() + "\n"
 
 # Main generation functions
 def generate_codex() -> str:
     """Generate Codex instructions."""
-    core = read_all_core()
-    # For now, use core content only (language standards can be added later)
-    return to_codex_format(core)
+    bundle = read_split_codex_bundle()
+    if bundle.strip():
+        return to_codex_format(bundle)
+    return to_codex_format(read_core_bundle())
 
 def generate_claude() -> str:
     """Generate Claude Code CLAUDE.md."""
-    core = read_all_core()
-    return to_claude_format(core)
+    return to_claude_format(read_core_bundle())
 
 def generate_cursor() -> str:
     """Generate Cursor .cursorrules."""
-    core = read_all_core()
-    return to_cursor_format(core)
+    return to_cursor_format(read_core_bundle())
 
 # Chinese translation (placeholder - can be enhanced with LLM API)
 def translate_to_chinese(content: str) -> str:

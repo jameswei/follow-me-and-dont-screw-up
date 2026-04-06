@@ -8,12 +8,13 @@
 
 本仓库包含用于指导 Claude Code、Codex、Cursor 等 AI Coding Agent 的完整工程规范。核心理念：
 
-- **四阶段强制确认**: 需求澄清 → 设计产出 → 实现验证 → 演示文档
+- **共享中性核心**: `instructions/core/` 为所有 Agent 提供通用工作流与行为基线
+- **Agent 专属封装**: `codex/`、`claude/`、`cursor/` 各自生成对应的指令文件
 - **文档优先**: 所有重要决策必须落盘
 - **可度量标准**: 验收标准、覆盖率、性能指标
 - **语言特定规范**: Java、Python、TypeScript、Go
 
-> **更新 v2.0**: 新增 Phase 4（演示与文档），支持 Claude Code，统一源文件管理
+> **更新 v2.2**: 统一为“共享核心 + Agent 专属封装”模式，避免跨 Agent 污染指令
 
 ## 仓库结构
 
@@ -21,7 +22,7 @@
 follow-me-and-dont-screw-up/
 ├── README.md                    # 本文件
 ├── instructions/                # 统一源文件（新增）
-│   ├── core/                    # 核心工作流定义
+│   ├── core/                    # 共享中性核心（所有 Agent 共用）
 │   │   ├── 01-workflow-overview.md
 │   │   ├── 02-phase1-requirement.md
 │   │   ├── 03-phase2-design.md
@@ -33,7 +34,13 @@ follow-me-and-dont-screw-up/
 ├── scripts/
 │   └── generate-agent-configs.py # 生成脚本
 ├── codex/
-│   └── instructions.md          # OpenAI Codex 全局指令（自动生成）
+│   ├── README.md                # Codex 说明
+│   ├── instructions.md          # Codex 兼容单文件入口
+│   ├── global.md                # Codex 全局默认行为
+│   ├── project.md               # Codex 项目级工作流
+│   └── templates/
+│       ├── PLAN.md              # 项目计划模板
+│       └── IMPLEMENTATION_PLAN.md # 实现计划模板
 ├── claude/
 │   └── CLAUDE.md                # Claude Code 指令（新增，自动生成）
 ├── cursor/
@@ -92,7 +99,7 @@ follow-me-and-dont-screw-up/
 ### 1. 生成 Agent 配置（从统一源文件）
 
 ```bash
-# 修改 instructions/core/ 后，重新生成各 agent 配置
+# 修改 shared 核心或任一 Agent 配置后，重新生成各 agent 配置
 python3 scripts/generate-agent-configs.py
 ```
 
@@ -108,13 +115,20 @@ cp claude/CLAUDE.md ./CLAUDE.md
 #### Codex (OpenAI)
 
 ```bash
-# 全局配置
+# 单文件兼容配置
 mkdir -p ~/.codex
 cp codex/instructions.md ~/.codex/instructions.md
 
-# 或在项目根目录
+# 或在项目根目录使用兼容文件
 cp codex/instructions.md ./codex.md
+
+# 如果你想自己拼装兼容文件
+cat codex/global.md codex/project.md > ~/.codex/instructions.md
 ```
+
+#### Claude Code / Cursor
+
+这两个 Agent 的输出文件由 `instructions/core/` 生成，保持同一套共享核心，但分别带有自己的文件格式与入口名。
 
 #### Cursor
 
@@ -128,7 +142,7 @@ cp cursor/.cursorrules ./.cursorrules
 
 ### 2. 新项目启动流程
 
-启动任何项目时，Agent 会自动遵循以下流程：
+对于需要更强过程控制的项目，可以采用下面的分阶段模板；它是示例工作流，不是共享核心的硬性要求：
 
 ```
 ┌─────────────────────────────────────────────────────────────┐

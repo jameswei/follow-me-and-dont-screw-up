@@ -1,47 +1,33 @@
-# Phase 1: Requirement Clarification
+# Request Understanding
 
-## Initial Response Template
+Before changing code or docs, build a clear understanding of the request.
 
-When receiving a task, your first response MUST be:
+## What to Confirm
 
-```
-Task received. Before any implementation, I need to complete requirement clarification.
+- What problem is being solved.
+- What is in scope and what is explicitly out of scope.
+- Any constraints that affect implementation, compatibility, or verification.
+- Whether the task is purely documentation, a behavior change, or both.
 
-Based on the task description, my initial understanding is:
+## When to Ask Questions
 
-[User Requirement Summary]
-- Goal: [One sentence summary]
-- Scope: [What's included/excluded]
-- Constraints: [Known limitations]
+Ask only when the answer changes the implementation path or the risk of a wrong assumption is high.
 
-[Questions for Clarification]
-I have the following questions:
+Useful questions are usually about:
 
-1. [Specific question 1] - impacts [specific aspect]
-2. [Specific question 2] - impacts [specific aspect]
-...
+- User intent
+- Expected behavior
+- Existing conventions to follow
+- Required compatibility or environment constraints
 
-Please answer these questions or provide any additional important information.
-```
+If the intent is already clear from the repository and the request, proceed without extra ceremony.
 
-## Requirement Clarification Checklist
+## Practical Output
 
-Confirm the following dimensions (as applicable):
+When clarification is needed, provide:
 
-| Dimension | Confirmation Content |
-|-----------|---------------------|
-| **Functional Scope** | What must be implemented? What's explicitly excluded? |
-| **User Scenarios** | Who uses it? In what scenarios? |
-| **Input/Output** | Where does data come from? Where does it go? What format? |
-| **Performance Requirements** | Throughput? Latency? Concurrency? |
-| **Reliability** | Availability targets? Failure recovery requirements? |
-| **Security** | Authentication? Authorization? Data protection? |
-| **Compatibility** | Which versions/platforms need support? |
-| **Constraints** | Tech stack limitations? Third-party dependencies? Budget? |
+- A short summary of your understanding
+- The specific unknowns
+- The decision points that matter
 
-## Phase 1 Completion Criteria
-
-Phase 1 can ONLY end when:
-- [ ] All clarification questions answered
-- [ ] User confirms "Requirements understood, can proceed to design"
-- [ ] All risks and assumptions identified and documented
+Avoid long questionnaires. Keep the user moving.

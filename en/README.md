@@ -6,7 +6,8 @@
 
 This repository contains comprehensive engineering standards for guiding Claude Code, Codex, Cursor, and other AI Coding Agents. Core principles:
 
-- **Three-Phase Mandatory Confirmation**: Requirements → Design → Implementation
+- **Shared Neutral Core**: `instructions/core/` provides the common workflow and behavior baseline
+- **Agent-Specific Wrappers**: `codex/`, `claude/`, and `cursor/` each generate their own instruction files
 - **Documentation First**: All significant decisions must be documented
 - **Measurable Standards**: Acceptance criteria, coverage, performance metrics
 - **Language-Specific Standards**: Java, Python, TypeScript, Go
@@ -17,7 +18,13 @@ This repository contains comprehensive engineering standards for guiding Claude 
 follow-me-and-dont-screw-up/
 ├── README.md                    # This file
 ├── codex/
-│   └── instructions.md          # OpenAI Codex global instructions
+│   ├── README.md                # Codex notes
+│   ├── instructions.md          # Codex compatibility bundle
+│   ├── global.md                # Codex global defaults
+│   ├── project.md               # Codex project workflow
+│   └── templates/
+│       ├── PLAN.md              # Project plan template
+│       └── IMPLEMENTATION_PLAN.md # Implementation plan template
 ├── cursor/
 │   └── .cursorrules             # Cursor IDE rules file
 ├── shared/
@@ -72,13 +79,20 @@ follow-me-and-dont-screw-up/
 #### Codex (OpenAI)
 
 ```bash
-# Global configuration
+# Single-file compatibility config
 mkdir -p ~/.codex
 cp codex/instructions.md ~/.codex/instructions.md
 
-# Or in project root
+# Or in the project root
 cp codex/instructions.md ./codex.md
+
+# Or build the bundle yourself
+cat codex/global.md codex/project.md > ~/.codex/instructions.md
 ```
+
+#### Claude Code / Cursor
+
+Their generated files are built from the shared neutral core in `instructions/core/`, with agent-specific wrappers applied on top.
 
 #### Cursor
 
@@ -92,7 +106,7 @@ cp cursor/.cursorrules ./.cursorrules
 
 ### 2. New Project Startup Workflow
 
-When starting any project, the Agent will automatically follow this workflow:
+For projects that want stronger process control, you can use the phased template below. It is an example workflow, not a hard requirement of the shared core:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐

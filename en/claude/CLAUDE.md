@@ -5,727 +5,201 @@
 # Location: Project root CLAUDE.md
 # Purpose: Claude Code system instructions
 
-# =============================================================================
-# CORE WORKFLOW: FOUR-PHASE MANDATORY PROCESS
-# =============================================================================
+# Shared Workflow Overview
 
-## Iron Rule: Never Write Implementation Code Directly
+## Operating Style
 
-You MUST follow this four-phase workflow. **Never skip phases or jump ahead.**
+Use a lightweight, risk-aware workflow.
 
-# Core Workflow Overview
+1. Read the relevant files and understand the request in context.
+2. Decide whether the task is simple enough to start directly or complex enough to benefit from a brief plan.
+3. Make the smallest change that solves the actual problem.
+4. Verify the change with the narrowest useful checks.
+5. Summarize what changed, what was verified, and any remaining risk.
 
-## Four-Phase Mandatory Workflow
+## Default Principles
 
-You MUST follow this four-phase workflow for ALL tasks. **Never skip phases or jump ahead.**
+- Optimize for correctness, clarity, and momentum.
+- Prefer repository conventions over inventing new patterns.
+- Preserve user work and avoid unrelated changes.
+- Ask for clarification only when the cost of a wrong assumption is meaningful.
+- Keep documentation and tracking artifacts current when the work changes behavior or scope.
 
-```
-Phase 1: Requirement Clarification
-        ↓
-Phase 2: Design & Planning
-        ↓
-Phase 3: Implementation & Verification
-        ↓
-Phase 4: Demo & Documentation
-```
+## Good Decision Rules
 
-## Phase Transitions
+- If the request is small and clear, start immediately.
+- If the request has multiple plausible approaches, surface the tradeoff before coding.
+- If the task is large or interruptible, keep notes in `PLAN.md`.
+- If a check fails, fix the failure before moving on.
 
-- **Phase 1 → Phase 2**: Only after user confirms "Requirements understood, proceed to design"
-- **Phase 2 → Phase 3**: Only after user confirms "Design approved, proceed to implementation"
-- **Phase 3 → Phase 4**: Only after all verification steps pass
-- **Phase 4 → Complete**: Only after user confirms "Documentation and demo acceptable"
+## Communication Baseline
 
-## Core Principles
+- Be concise and factual.
+- Use English unless the user requests another language.
+- Report blockers early.
+- State what you did, what you verified, and what remains.
+- Do not pretend certainty when you do not have it.
 
-1. **Document-First**: All important decisions must be written down
-2. **Measurable Standards**: Acceptance criteria, coverage, performance metrics
-3. **Incremental Delivery**: Small steps with frequent confirmation
-4. **User Confirmation**: Explicit approval required at each phase boundary
+# Request Understanding
 
-## Forbidden Actions
+Before changing code or docs, build a clear understanding of the request.
 
-- ❌ Writing implementation code without requirement confirmation
-- ❌ Starting implementation before design approval
-- ❌ Committing more than 200 lines of changes (excluding tests) at once
-- ❌ Using "TODO" or "FIXME" without creating tracked tasks
-- ❌ Ignoring compiler/static analysis warnings
-- ❌ Committing untested code
-- ❌ Hardcoding configuration in code
-- ❌ Skipping verification steps
-- ❌ Completing without documentation
+## What to Confirm
 
-## Communication Standards
+- What problem is being solved.
+- What is in scope and what is explicitly out of scope.
+- Any constraints that affect implementation, compatibility, or verification.
+- Whether the task is purely documentation, a behavior change, or both.
 
-- Use English for technical discussions unless user requests otherwise
-- Ask immediately when uncertain, never guess
-- Report progress briefly after each milestone
-- Read PLAN.md at the start of each session to confirm current task
+## When to Ask Questions
 
+Ask only when the answer changes the implementation path or the risk of a wrong assumption is high.
 
-# Phase 1: Requirement Clarification
+Useful questions are usually about:
 
-## Initial Response Template
+- User intent
+- Expected behavior
+- Existing conventions to follow
+- Required compatibility or environment constraints
 
-When receiving a task, your first response MUST be:
+If the intent is already clear from the repository and the request, proceed without extra ceremony.
 
-```
-Task received. Before any implementation, I need to complete requirement clarification.
+## Practical Output
 
-Based on the task description, my initial understanding is:
+When clarification is needed, provide:
 
-[User Requirement Summary]
-- Goal: [One sentence summary]
-- Scope: [What's included/excluded]
-- Constraints: [Known limitations]
+- A short summary of your understanding
+- The specific unknowns
+- The decision points that matter
 
-[Questions for Clarification]
-I have the following questions:
+Avoid long questionnaires. Keep the user moving.
 
-1. [Specific question 1] - impacts [specific aspect]
-2. [Specific question 2] - impacts [specific aspect]
-...
+# Planning and Design
 
-Please answer these questions or provide any additional important information.
-```
+Use planning when it reduces risk or helps the task stay reviewable.
 
-## Requirement Clarification Checklist
+## Planning Signals
 
-Confirm the following dimensions (as applicable):
+Create or update `PLAN.md` when the work is:
 
-| Dimension | Confirmation Content |
-|-----------|---------------------|
-| **Functional Scope** | What must be implemented? What's explicitly excluded? |
-| **User Scenarios** | Who uses it? In what scenarios? |
-| **Input/Output** | Where does data come from? Where does it go? What format? |
-| **Performance Requirements** | Throughput? Latency? Concurrency? |
-| **Reliability** | Availability targets? Failure recovery requirements? |
-| **Security** | Authentication? Authorization? Data protection? |
-| **Compatibility** | Which versions/platforms need support? |
-| **Constraints** | Tech stack limitations? Third-party dependencies? Budget? |
+- Multi-step
+- Interruptible
+- Dependent on another task
+- Likely to span more than one session
 
-## Phase 1 Completion Criteria
+## Useful Planning Contents
 
-Phase 1 can ONLY end when:
-- [ ] All clarification questions answered
-- [ ] User confirms "Requirements understood, can proceed to design"
-- [ ] All risks and assumptions identified and documented
+- Short task summary
+- Subtasks or milestones
+- Dependencies and blockers
+- Current status
+- Verification notes
 
+## Design Guidance
 
-# Phase 2: Design & Planning
+- Prefer the smallest design that cleanly solves the problem.
+- Keep the plan aligned with the current implementation, not the original guess.
+- If design choices affect user-facing behavior, note the tradeoffs.
+- If a separate implementation plan helps, create one, but keep it short.
 
-## Design Deliverables
+## Good Plan Hygiene
 
-After user confirms requirements, you MUST produce the following documents in `docs/` directory:
+- Mark progress as it happens.
+- Keep task names specific.
+- Record blockers instead of hiding them in chat.
+- Update the plan when scope changes.
 
-### 2.1 PRD-SPEC.md (Product Requirements Document)
+# Implementation and Verification
 
-```markdown
-# PRD-SPEC: [Project Name]
+Implement in small steps and verify as you go.
 
-## 1. Overview
-### 1.1 Background
-[Why this feature is needed]
+## Implementation Guidelines
 
-### 1.2 Goal
-[One sentence goal]
+- Make direct, local edits before considering broad refactors.
+- Match the existing architecture unless there is a clear reason to change it.
+- Avoid mixing unrelated cleanup into the requested task.
+- Keep public behavior stable unless the request explicitly changes it.
 
-### 1.3 Success Criteria (Measurable)
-- [ ] Criterion 1: [Specific metric]
-- [ ] Criterion 2: [Specific metric]
+## Verification Order
 
-## 2. Functional Requirements
-### 2.1 User Stories
-As a [role], I want [feature], so that [value]
+Prefer the narrowest checks that prove the change works:
 
-### 2.2 Feature List
-| ID | Feature | Priority | Acceptance Criteria |
-|----|---------|----------|---------------------|
-| F1 | [Name] | P0/P1/P2 | [Testable conditions] |
+1. Syntax or type checks
+2. Lint or static analysis
+3. Targeted tests for the changed area
+4. Broader tests if the risk justifies it
 
-### 2.3 Non-Functional Requirements
-- Performance: [Specific metrics]
-- Security: [Specific requirements]
-- Availability: [Specific metrics]
-
-## 3. Constraints & Assumptions
-- Technical constraints: [List]
-- Business constraints: [List]
-- Key assumptions: [List with impact if wrong]
-
-## 4. Risk Analysis
-| Risk | Likelihood | Impact | Mitigation |
-|------|------------|--------|------------|
-| [Description] | High/Med/Low | High/Med/Low | [Specific actions] |
-
-## 5. Glossary
-| Term | Definition |
-|------|------------|
-| [Term] | [Explanation] |
-```
-
-### 2.2 ARCHITECTURE.md (Architecture Design)
-
-```markdown
-# ARCHITECTURE: [Project Name]
-
-## 1. Architecture Overview
-### 1.1 Architecture Style
-[Monolithic/Microservices/Event-driven/Layered/Hexagonal]
-
-### 1.2 Tech Stack
-| Layer | Technology | Rationale |
-|-------|------------|-----------|
-| Language | Java/Python/TS/Go | [Reason] |
-| Framework | [Name] | [Reason] |
-| Storage | [Database] | [Reason] |
-| Deployment | [Method] | [Reason] |
-
-## 2. System Architecture Diagram
-[Use Mermaid or ASCII]
-
-## 3. Component Design
-### 3.1 Component List
-| Component | Responsibility | Dependencies |
-|-----------|---------------|--------------|
-| [Name] | [Single responsibility] | [Dependencies] |
-
-### 3.2 Component Interactions
-[Sequence diagram or flow]
-
-## 4. Data Design
-### 4.1 Data Model
-[ER diagram or entity definitions]
-
-### 4.2 Data Flow
-[How data flows through the system]
-
-## 5. Interface Design
-### 5.1 Internal Interfaces
-| Interface | Input | Output | Error Handling |
-|-----------|-------|--------|----------------|
-| [Name] | [Type] | [Type] | [Strategy] |
-
-### 5.2 External Interfaces (if applicable)
-| Interface | Protocol | Auth | Rate Limit |
-|-----------|----------|------|------------|
-| [API endpoint] | REST/gRPC | [Method] | [Strategy] |
-
-## 6. Quality Attributes
-### 6.1 Scalability
-[Horizontal/vertical scaling approach]
-
-### 6.2 Reliability
-- Failure detection: [Mechanism]
-- Failure recovery: [Mechanism]
-- Degradation strategy: [Strategy]
-
-### 6.3 Observability
-- Logging: [Standards]
-- Metrics: [Key metrics]
-- Tracing: [Solution]
-
-### 6.4 Security
-- Authentication: [Solution]
-- Authorization: [Solution]
-- Data protection: [Solution]
+## Quality Expectations
 
-## 7. Decision Records (ADR)
-| Decision | Options | Choice | Rationale |
-|----------|---------|--------|-----------|
-| [Decision point] | [Option A/B] | [Choice] | [Trade-off analysis] |
-```
+- Use clear names.
+- Keep functions focused.
+- Handle errors with enough context to debug them.
+- Add tests when behavior changes or when regressions are likely.
 
-### 2.3 TEST_STRATEGY.md (Test Strategy)
+## When to Pause
 
-```markdown
-# TEST STRATEGY: [Project Name]
+Pause when:
 
-## 1. Test Layers
-| Layer | Scope | Tools | Coverage Target |
-|-------|-------|-------|-----------------|
-| Unit | Single function/class | [Framework] | ≥80% |
-| Integration | Component interactions | [Framework] | Critical paths |
-| E2E | Complete user flows | [Tools] | P0 scenarios |
+- A missing decision blocks the implementation path.
+- A test or check fails in a way that changes the planned approach.
+- The requested change is broader than it first appeared.
 
-## 2. Unit Test Standards
-- Every public function must have tests
-- Naming: `Test[FunctionName]_[Scenario]_[ExpectedResult]`
-- Must include: happy path, boundary conditions, error paths
-- Mock external dependencies
+## Practical Handoff
 
-## 3. Integration Test Standards
-- Test component contracts
-- Use test databases/containers
-- Verify transaction behavior
-
-## 4. Test Data
-- Use factory pattern for test data
-- No shared mutable test state
-```
-
-### 2.4 PLAN.md (Project Plan)
+Before finishing, make sure the change matches the request, the relevant checks ran or were explained, and the workspace does not contain accidental edits.
 
-```markdown
-# PLAN: [Project Name]
+# Documentation and Demonstration
 
-## Task Overview
-| Metric | Value |
-|--------|-------|
-| Total Tasks | [N] |
-| Completed | [N] ([%]) |
-| In Progress | [N] |
-| Blocked | [N] |
+Documentation should reflect the implementation, not an imagined end state.
 
-## Task Breakdown (WBS)
-| ID | Task | Status | Priority | Est. Hours | Dependencies | Deliverable |
-|----|------|--------|----------|------------|--------------|-------------|
-| 1.1.1 | [Task] | ⬜/🔄/✅/🚫 | P0/P1/P2 | [Xh] | [Dep ID] | [Filename] |
+## When to Update Docs
 
-## Dependency Graph
-[Critical path visualization]
+Update docs when the change affects:
 
-## Current Status
-### Current Task: [Task ID]
-- Start Time: [YYYY-MM-DD HH:MM]
-- Est. Completion: [YYYY-MM-DD HH:MM]
-- Actual Hours: [Xh]
+- User-facing behavior
+- Setup or environment requirements
+- Commands or workflows
+- Architecture or design assumptions
 
-## Change Log
-| Date | Change Type | Task ID | Change | Reason |
-|------|-------------|---------|--------|--------|
-```
+## Keep Documentation Practical
 
-**PLAN.md Core Purpose**:
-- **External Task Board**: LLM reasoning persisted to file, not context-dependent
-- **Context Recovery Checkpoint**: Resume here after interruption
-- **Trackable Progress**: Task status, hours, dependencies
-- **Single Source of Truth**: All work must be tracked here
+- Prefer concise, accurate docs over long prose.
+- Use the repository’s existing doc structure when possible.
+- Include examples only when they are useful and current.
 
-## Phase 2 Completion Criteria
+## Demonstration Guidance
 
-After producing design documents, you MUST say:
+For non-trivial changes, include evidence that the work is usable:
 
-```
-Design documents completed in docs/ directory:
-- PRD-SPEC.md: Requirements specification
-- ARCHITECTURE.md: Architecture design
-- TEST_STRATEGY.md: Test strategy
-- PLAN.md: Project plan
+- UI: screenshots or a short recording
+- API: request/response examples
+- CLI: example commands and outputs
 
-Please review and confirm:
-1. Is the requirement understanding correct?
-2. Does the architecture meet requirements?
-3. Are there any omissions or adjustments needed?
+## Final Check
 
-After your confirmation, I will proceed to implementation.
-```
+Before handoff, verify that the documentation matches the implemented behavior and that any examples still work.
 
-Only proceed to Phase 3 after user explicitly confirms "Design approved, can start implementation".
+# Communication
 
+Keep communication short, factual, and useful.
 
-# Phase 3: Implementation & Verification
+## Baseline
 
-## Environment Setup (Required Before Starting)
+- State what you are doing.
+- State what you verified.
+- State what remains.
+- Mention blockers early.
+- Use English unless the user asks otherwise.
 
-### 3.1 Run Environment Check
+## Good Updates
 
-```bash
-# 1. Run environment check script
-./scripts/check-env.sh
+- I read the relevant files and confirmed the current behavior.
+- I implemented the change and am verifying it now.
+- I found an issue and am fixing it before moving on.
+- The task is blocked on one missing decision.
 
-# 2. If environment missing, run language-specific setup
-./scripts/setup-python.sh      # Python (uv)
-./scripts/setup-typescript.sh  # TypeScript (nvm + npm/bun)
-./scripts/setup-java.sh        # Java (jenv + maven)
-./scripts/setup-go.sh          # Go (goenv)
+## When Uncertain
 
-# 3. Verify toolchain
-make validate  # or language-specific validation
-```
+If there are multiple viable paths, summarize the options briefly and call out the tradeoff that matters.
 
-### 3.2 Recommended Tool Version Managers
-
-| Language | Version Manager | Package Manager | Verify Command |
-|----------|-----------------|-----------------|----------------|
-| Python | `uv` | `uv pip` | `uv --version` |
-| TypeScript | `nvm` | `npm`/`bun` | `node --version` |
-| Java | `jenv` | `maven` | `java --version` |
-| Go | `goenv` | `go mod` | `go version` |
-
-### 3.3 Docker Sandbox (Optional but Recommended)
-
-```bash
-# Start language-specific sandbox
-docker-compose -f sandbox/docker-compose.yml up -d python-dev
-docker-compose -f sandbox/docker-compose.yml up -d dev  # Multi-language
-
-# Enter sandbox
-docker-compose -f sandbox/docker-compose.yml exec dev bash
-```
-
-## 3.4 Pre-Implementation
-
-After design confirmation, first create `docs/IMPLEMENTATION_PLAN.md`:
-
-```markdown
-# IMPLEMENTATION PLAN
-
-## Task Breakdown
-| No. | Task | Dependencies | Est. Time | Deliverable |
-|-----|------|--------------|-----------|-------------|
-| 1 | [Specific task] | [Prerequisites] | [Estimate] | [Verifiable output] |
-
-## Implementation Order
-[Explain why this order]
-
-## Verification Checklist
-- [ ] Each task independently verifiable
-- [ ] Integration points identified
-```
-
-## 3.5 Coding Standards
-
-Follow language-specific standards (see `instructions/languages/`).
-
-### General Code Standards
-
-**Naming**:
-- Variables/Functions: Clear intent, avoid abbreviations (unless industry standard)
-- Classes/Modules: Nouns, single responsibility
-- Booleans: Use is/has/should/can prefix
-
-**Function Design**:
-- Single Responsibility: One function does one thing
-- Parameter Count: ≤3, use config object/struct if more
-- Return Values: Error as last return value (Go style) or use exceptions/Result
-- Side Effects: Indicate in function name (e.g., `saveXxx`, `mutateXxx`)
-
-**Comments**:
-- Why > What > How
-- Public APIs must have documentation comments
-- Complex algorithms must explain principles
-
-**Error Handling**:
-- Error messages must include context (which operation, which entity)
-- Distinguish user errors (4xx) from system errors (5xx)
-- Log at error origin, wrap when propagating
-
-## 3.6 Incremental Delivery
-
-- After each feature point, proactively show code and request feedback
-- NO large code dumps in single commit
-- If design doesn't cover something, PAUSE and return to Phase 2
-
-## 3.7 Verification Loop (Mandatory)
-
-After EVERY code change, execute verification:
-
-```
-Step 1: Compilation/Type Check
-   Command: tsc --noEmit / mypy . / go build / mvn compile
-   On Fail: STOP, fix syntax errors
-
-Step 2: Static Analysis
-   Command: eslint . / ruff check . / golangci-lint run
-   On Fail: Fix all Errors, evaluate Warnings
-
-Step 3: Unit Tests
-   Command: jest / pytest / go test / mvn test
-   On Fail: Fix failing tests, add missing tests
-   Target: Coverage ≥80%
-
-Step 4: Code Review (Self-Review)
-   Checklist:
-   - [ ] Follows language standards
-   - [ ] Naming is clear
-   - [ ] Has appropriate comments
-   - [ ] Error handling complete
-   - [ ] No redundant code
-```
-
-## 3.8 PLAN.md Status Updates
-
-During implementation, update task status in real-time:
-
-```markdown
-#### Task Detail: 1.1.1
-
-**Implementation**: ✅ [2026-04-03 15:00]
-**Verification**:
-- Compilation: ✅ [Timestamp]
-- Static Analysis: ✅ [Timestamp]
-- Unit Test: 🔄 [Coverage: 75% → Target: 80%]
-- Integration Test: ⬜
-
-**Verification History**:
-- [2026-04-03 15:00] First verification: Compilation failed, missing imports
-- [2026-04-03 15:05] After fix: Compilation passed, test coverage insufficient
-```
-
-## Phase 3 Completion Criteria
-
-Phase 3 ends when:
-- [ ] All tasks in PLAN.md marked ✅
-- [ ] All verification steps pass
-- [ ] Code review checklist complete
-- [ ] User confirms "Implementation complete, proceed to documentation"
-
-
-# Phase 4: Demo & Documentation
-
-## Overview
-
-Phase 4 ensures the work is presentable and usable by others. Even without a web UI or mobile frontend, documentation is essential for:
-- Service consumers (API documentation)
-- System maintainers (architecture and component details)
-- Open source contributors (comprehensive guides)
-
-## 4.1 Functional Demo
-
-### For Projects with UI
-- Screenshots or screen recordings of key flows
-- Interactive demonstration of main features
-- Edge case handling demonstration
-
-### For API/Backend Services
-- API documentation (OpenAPI/Swagger)
-- Example requests and responses
-- Authentication/authorization flow demonstration
-- cURL or Postman collection examples
-
-### For CLI Tools
-- Usage examples with common scenarios
-- Help output documentation
-- Input/output sample demonstrations
-
-## 4.2 Documentation Deliverables
-
-### README.md (Project Root)
-
-```markdown
-# [Project Name]
-
-## Overview
-[One paragraph description]
-
-## Quick Start
-### Installation
-```bash
-[Installation commands]
-```
-
-### Usage
-```bash
-[Basic usage examples]
-```
-
-## Features
-- [Feature 1]: [Brief description]
-- [Feature 2]: [Brief description]
-
-## Documentation
-- [API Documentation](./docs/API.md) (if applicable)
-- [Architecture](./docs/ARCHITECTURE.md)
-- [Development Guide](./docs/DEVELOPMENT.md)
-
-## Contributing
-[How to contribute]
-
-## License
-[License information]
-```
-
-### API Documentation (if applicable)
-
-```markdown
-# API Documentation
-
-## Base URL
-[Base URL for API]
-
-## Authentication
-[How to authenticate]
-
-## Endpoints
-
-### [Endpoint Name]
-**URL**: `[METHOD] /path`
-
-**Request**:
-```json
-{
-  "field": "type - description"
-}
-```
-
-**Response**:
-```json
-{
-  "field": "type - description"
-}
-```
-
-**Error Codes**:
-| Code | Description |
-|------|-------------|
-| 400 | [Description] |
-| 401 | [Description] |
-```
-
-### Development Guide
-
-```markdown
-# Development Guide
-
-## Prerequisites
-[List requirements]
-
-## Setup
-```bash
-[Setup commands]
-```
-
-## Development Workflow
-[How to develop, test, contribute]
-
-## Testing
-```bash
-[Testing commands]
-```
-
-## Deployment
-[Deployment instructions]
-```
-
-## 4.3 Architecture Communication
-
-Ensure ARCHITECTURE.md from Phase 2 is up-to-date and includes:
-- Current system diagram reflecting actual implementation
-- Component interaction details
-- Deployment architecture (if applicable)
-- Performance characteristics observed
-
-## 4.4 Final Review Checklist
-
-Before marking Phase 4 complete:
-
-- [ ] README.md is comprehensive and accurate
-- [ ] API documentation complete (if applicable)
-- [ ] Development guide includes setup instructions
-- [ ] Architecture documentation reflects actual implementation
-- [ ] All code examples in documentation are tested and working
-- [ ] Screenshots/demos are current and representative
-
-## Phase 4 Completion Criteria
-
-Phase 4 ends when:
-- [ ] All documentation deliverables complete
-- [ ] Demo/screenshots prepared
-- [ ] User confirms "Documentation and demo acceptable"
-
-## Final Handoff Statement
-
-```
-Project complete!
-
-Deliverables:
-- Implementation: [Summary]
-- Documentation: [Links]
-- Demo: [Links/screenshots]
-
-All phases complete. Project is ready for use/deployment.
-```
-
-
-# Communication Standards
-
-## Language
-
-- Use English for technical discussions unless user requests otherwise
-- Ask immediately when uncertain, never guess
-- Report progress briefly after each milestone
-
-## Phase Transition Confirmations
-
-At the end of each phase, explicitly ask for confirmation:
-
-### Phase 1 → Phase 2
-```
-Requirements clarified. Ready to proceed to design phase?
-Please confirm: "Requirements understood, proceed to design"
-```
-
-### Phase 2 → Phase 3
-```
-Design documents completed. Ready to proceed to implementation?
-Please confirm: "Design approved, proceed to implementation"
-```
-
-### Phase 3 → Phase 4
-```
-Implementation and verification complete. Ready to prepare documentation and demo?
-Please confirm: "Implementation complete, proceed to documentation"
-```
-
-### Phase 4 → Complete
-```
-Documentation and demo prepared. Project complete?
-Please confirm: "Documentation and demo acceptable"
-```
-
-## Progress Reporting
-
-After each milestone:
-```
-[Milestone Complete]: [Brief description]
-- Completed: [What was done]
-- Next: [What's coming next]
-- Blockers: [Any issues, or "None"]
-```
-
-## Context Recovery
-
-### Session Start Standard Script
-
-```
-Good [morning/afternoon]! I'm your Coding Agent.
-
-Current project status (from PLAN.md):
-- Total Tasks: [N]
-- Completed: [N] ([%])
-- Current Task: [Task ID] - [Task Description]
-- Task Status: [Not Started/In Progress/Done/Blocked]
-
-Continue current task?
-- Continue: I'll start from [specific step]
-- Switch: Please tell me the new task ID
-- Review: I can show recent changes
-```
-
-### Post-Interruption Recovery
-
-If session was interrupted:
-
-1. **Read PLAN.md**: Understand current task status
-2. **Check last update time**: Confirm information freshness
-3. **Verify completed tasks**: Quickly check deliverables exist
-4. **Confirm current task**: Clarify what to do next
-5. **Ask user**: "According to PLAN.md, current task is [X]. Continue?"
-
-## Uncertainty Handling
-
-When uncertain:
-- STOP and ask for clarification
-- Never proceed with assumptions
-- Present options when multiple approaches exist
-
-Example:
-```
-I'm uncertain about [specific point]. Here are the options:
-
-A. [Option A] - Pros: [X], Cons: [Y]
-B. [Option B] - Pros: [X], Cons: [Y]
-
-Which would you prefer, or is there another approach?
-```
+Avoid over-explaining routine steps or pretending certainty when you do not have it.

@@ -1,48 +1,34 @@
-# Core Workflow Overview
+# Shared Workflow Overview
 
-## Four-Phase Mandatory Workflow
+## Operating Style
 
-You MUST follow this four-phase workflow for ALL tasks. **Never skip phases or jump ahead.**
+Use a lightweight, risk-aware workflow.
 
-```
-Phase 1: Requirement Clarification
-        ↓
-Phase 2: Design & Planning
-        ↓
-Phase 3: Implementation & Verification
-        ↓
-Phase 4: Demo & Documentation
-```
+1. Read the relevant files and understand the request in context.
+2. Decide whether the task is simple enough to start directly or complex enough to benefit from a brief plan.
+3. Make the smallest change that solves the actual problem.
+4. Verify the change with the narrowest useful checks.
+5. Summarize what changed, what was verified, and any remaining risk.
 
-## Phase Transitions
+## Default Principles
 
-- **Phase 1 → Phase 2**: Only after user confirms "Requirements understood, proceed to design"
-- **Phase 2 → Phase 3**: Only after user confirms "Design approved, proceed to implementation"
-- **Phase 3 → Phase 4**: Only after all verification steps pass
-- **Phase 4 → Complete**: Only after user confirms "Documentation and demo acceptable"
+- Optimize for correctness, clarity, and momentum.
+- Prefer repository conventions over inventing new patterns.
+- Preserve user work and avoid unrelated changes.
+- Ask for clarification only when the cost of a wrong assumption is meaningful.
+- Keep documentation and tracking artifacts current when the work changes behavior or scope.
 
-## Core Principles
+## Good Decision Rules
 
-1. **Document-First**: All important decisions must be written down
-2. **Measurable Standards**: Acceptance criteria, coverage, performance metrics
-3. **Incremental Delivery**: Small steps with frequent confirmation
-4. **User Confirmation**: Explicit approval required at each phase boundary
+- If the request is small and clear, start immediately.
+- If the request has multiple plausible approaches, surface the tradeoff before coding.
+- If the task is large or interruptible, keep notes in `PLAN.md`.
+- If a check fails, fix the failure before moving on.
 
-## Forbidden Actions
+## Communication Baseline
 
-- ❌ Writing implementation code without requirement confirmation
-- ❌ Starting implementation before design approval
-- ❌ Committing more than 200 lines of changes (excluding tests) at once
-- ❌ Using "TODO" or "FIXME" without creating tracked tasks
-- ❌ Ignoring compiler/static analysis warnings
-- ❌ Committing untested code
-- ❌ Hardcoding configuration in code
-- ❌ Skipping verification steps
-- ❌ Completing without documentation
-
-## Communication Standards
-
-- Use English for technical discussions unless user requests otherwise
-- Ask immediately when uncertain, never guess
-- Report progress briefly after each milestone
-- Read PLAN.md at the start of each session to confirm current task
+- Be concise and factual.
+- Use English unless the user requests another language.
+- Report blockers early.
+- State what you did, what you verified, and what remains.
+- Do not pretend certainty when you do not have it.
