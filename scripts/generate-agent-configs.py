@@ -5,22 +5,23 @@ Generate agent-specific configuration files from unified instruction sources.
 This script reads from:
 - codex/ for the Codex-specific split bundle
 - instructions/core/ for the shared, agent-neutral baseline
+- instructions/claude/ for Claude Code-specific overlays
 
 It then generates:
-- codex/ instructions.md (single-file compatibility bundle)
+- codex/instructions.md (single-file compatibility bundle)
 - claude/CLAUDE.md (Claude Code)
 - cursor/.cursorrules (Cursor IDE)
 - gemini/GEMINI.md (Gemini CLI)
-
-And their Chinese translations in en/ directory.
 """
 
 from pathlib import Path
+
 # Configuration
 BASE_DIR = Path(__file__).parent.parent
 OUTPUT_DIR = BASE_DIR
 CODEX_DIR = OUTPUT_DIR / "codex"
 CORE_DIR = OUTPUT_DIR / "instructions" / "core"
+CLAUDE_OVERLAY_DIR = OUTPUT_DIR / "instructions" / "claude"
 CORE_FILES = [
     "01-workflow-overview.md",
     "02-phase1-requirement.md",
@@ -53,6 +54,14 @@ def read_core_bundle() -> str:
     parts = [read_core_file(filename).strip() for filename in CORE_FILES]
     return "\n\n".join(part for part in parts if part)
 
+def read_claude_overlay() -> str:
+    """Read all Claude Code-specific overlay files in sorted order."""
+    if not CLAUDE_OVERLAY_DIR.exists():
+        return ""
+    files = sorted(CLAUDE_OVERLAY_DIR.glob("*.md"))
+    parts = [f.read_text(encoding='utf-8').strip() for f in files]
+    return "\n\n".join(part for part in parts if part)
+
 def read_split_codex_bundle() -> str:
     """Read the Codex split files and combine them into one bundle."""
     parts = [
@@ -72,14 +81,17 @@ The split source files live in `codex/global.md` and `codex/project.md`.
 """
     return header + content.strip() + "\n"
 
-def to_claude_format(content: str) -> str:
-    """Convert to Claude Code format (CLAUDE.md - similar to Codex)."""
+def to_claude_format(core: str, overlay: str) -> str:
+    """Convert to Claude Code format (CLAUDE.md), appending the Claude-specific overlay."""
     header = """# CLAUDE.md
 # Location: Project root CLAUDE.md
 # Purpose: Claude Code system instructions
 
 """
-    return header + content.strip() + "\n"
+    body = core.strip()
+    if overlay.strip():
+        body += "\n\n" + overlay.strip()
+    return header + body + "\n"
 
 def to_cursor_format(content: str) -> str:
     """Convert to Cursor format (.cursorrules with specific syntax)."""
@@ -108,8 +120,8 @@ def generate_codex() -> str:
     return to_codex_format(read_core_bundle())
 
 def generate_claude() -> str:
-    """Generate Claude Code CLAUDE.md."""
-    return to_claude_format(read_core_bundle())
+    """Generate Claude Code CLAUDE.md (shared core + Claude-specific overlay)."""
+    return to_claude_format(read_core_bundle(), read_claude_overlay())
 
 def generate_cursor() -> str:
     """Generate Cursor .cursorrules."""
@@ -118,22 +130,6 @@ def generate_cursor() -> str:
 def generate_gemini() -> str:
     """Generate Gemini CLI GEMINI.md."""
     return to_gemini_format(read_core_bundle())
-
-# Chinese translation (placeholder - can be enhanced with LLM API)
-def translate_to_chinese(content: str) -> str:
-    """
-    Translate content to Chinese.
-
-    For now, this is a placeholder that returns the original content.
-    In production, this could call an LLM API for translation.
-    """
-    # TODO: Implement actual translation using LLM API
-    # For now, return content with a header indicating it's not translated
-    header = """# 注意：中文版尚未翻译
-# Note: Chinese version not yet translated
-
-"""
-    return header + content
 
 # File writers
 def write_file(path: Path, content: str) -> None:
@@ -147,9 +143,6 @@ def main():
     print("=" * 60)
     print("Generating Agent Configuration Files")
     print("=" * 60)
-
-    # Generate English versions
-    print("\n--- English Versions ---")
 
     # Codex
     codex_content = generate_codex()
@@ -167,25 +160,6 @@ def main():
     gemini_content = generate_gemini()
     write_file(OUTPUT_DIR / "gemini" / "GEMINI.md", gemini_content)
 
-    # Generate Chinese versions (in en/ directory for now, can be renamed)
-    print("\n--- Chinese Versions (Placeholder) ---")
-
-    # Codex CN
-    codex_cn = translate_to_chinese(codex_content)
-    write_file(OUTPUT_DIR / "en" / "codex" / "instructions.md", codex_cn)
-
-    # Claude CN
-    claude_cn = translate_to_chinese(claude_content)
-    write_file(OUTPUT_DIR / "en" / "claude" / "CLAUDE.md", claude_cn)
-
-    # Cursor CN
-    cursor_cn = translate_to_chinese(cursor_content)
-    write_file(OUTPUT_DIR / "en" / "cursor" / ".cursorrules", cursor_cn)
-
-    # Gemini CN
-    gemini_cn = translate_to_chinese(gemini_content)
-    write_file(OUTPUT_DIR / "en" / "gemini" / "GEMINI.md", gemini_cn)
-
     print("\n" + "=" * 60)
     print("Generation Complete!")
     print("=" * 60)
@@ -194,12 +168,6 @@ def main():
     print("  - claude/CLAUDE.md")
     print("  - cursor/.cursorrules")
     print("  - gemini/GEMINI.md")
-    print("  - en/codex/instructions.md (CN)")
-    print("  - en/claude/CLAUDE.md (CN)")
-    print("  - en/cursor/.cursorrules (CN)")
-    print("  - en/gemini/GEMINI.md (CN)")
-    print("\nNote: Chinese translations are placeholders.")
-    print("      Run with LLM API integration for actual translation.")
 
 
 if __name__ == "__main__":
